@@ -17,7 +17,7 @@ class STWINSLEGACY_API APCGame : public APlayerController
 public :
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character")
-	TObjectPtr<class ABaseCharacter> PlayerCharacter;
+	TObjectPtr<class APlayerCharacter> PlayerCharacter;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "IMC")
 	TObjectPtr<class UInputMappingContext> CharacterIMC;

@@ -5,6 +5,7 @@
 #include "MyGameInstance.h"
 #include "MySaveGame.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -40,5 +41,12 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::InitialiseCharacterStats()
 {
 	CharacterStats = GameInstance->GetCurrentSaveGame()->PlayerStats;
+	GetCharacterMovement()->MaxWalkSpeed = CharacterStats.BaseSpeed;
+}
+
+void APlayerCharacter::Movement(FVector2D Value)
+{	
+	AddMovementInput(GetActorForwardVector(), Value.Y);
+	AddMovementInput(GetActorRightVector(), Value.X);
 }
 

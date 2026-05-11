@@ -33,5 +33,8 @@ protected:
 	virtual void BeginPlay() override;
 	
 	void InitialiseCharacterStats();
-
+	
+public:
+	
+	void Movement(FVector2D Value);
 };

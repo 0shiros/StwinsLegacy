@@ -87,6 +87,8 @@ void APCGame::Move(const FInputActionValue& Value)
 	}
 	
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Move Action Triggered"));
+	
+	PlayerCharacter->Movement(Value.Get<FVector2D>());
 }
 
 void APCGame::Dash(const FInputActionValue& Value)
