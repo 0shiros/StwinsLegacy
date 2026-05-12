@@ -47,11 +47,11 @@ protected:
 	
 private:
 	
-	virtual void BeginPlay() override;
+	virtual void BeginPlay() override;		
 	
-	virtual void SetupInputComponent() override;
+	virtual void SetupInputComponent() override;	
 	
-public :
+public :	
 	
 	void Move(const FInputActionValue& Value);
 	

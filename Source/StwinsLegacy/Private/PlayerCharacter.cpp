@@ -4,6 +4,7 @@
 
 #include "MyGameInstance.h"
 #include "MySaveGame.h"
+#include "PCGame.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -27,6 +28,7 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	GameInstance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	PlayerController = Cast<APCGame>(GetController());
 	
 	if (GameInstance)
 	{
@@ -38,6 +40,14 @@ void APlayerCharacter::BeginPlay()
 	}
 }
 
+void APlayerCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+	LookAtMouse();
+	UpdateRotation(DeltaTime);
+}
+
 void APlayerCharacter::InitialiseCharacterStats()
 {
 	CharacterStats = GameInstance->GetCurrentSaveGame()->PlayerStats;
@@ -46,7 +56,54 @@ void APlayerCharacter::InitialiseCharacterStats()
 
 void APlayerCharacter::Movement(FVector2D Value)
 {	
-	AddMovementInput(GetActorForwardVector(), Value.Y);
-	AddMovementInput(GetActorRightVector(), Value.X);
+	if (Value.IsNearlyZero()) return;
+
+	FVector Forward = GetActorForwardVector();
+	FVector Right = GetActorRightVector();
+
+	MoveInput = (Forward * Value.Y + Right * Value.X).GetSafeNormal();
+
+	AddMovementInput(MoveInput);
+}
+
+void APlayerCharacter::LookAtMouse()
+{
+	if (!PlayerController) return;
+
+	float MouseX, MouseY;
+	PlayerController->GetMousePosition(MouseX, MouseY);
+
+	FVector WorldLocation, WorldDirection;
+	PlayerController->DeprojectScreenPositionToWorld(MouseX, MouseY, WorldLocation, WorldDirection);
+
+	FVector PlaneOrigin = GetActorLocation();
+	FVector PlaneNormal = FVector::UpVector;
+
+	FVector AimPoint = FMath::LinePlaneIntersection(
+		WorldLocation,
+		WorldLocation + WorldDirection * 10000.f,
+		PlaneOrigin,
+		PlaneNormal
+	);
+
+	AimDirection = (AimPoint - GetActorLocation()).GetSafeNormal();
+}
+
+void APlayerCharacter::UpdateRotation(float DeltaTime)
+{
+	if (AimDirection.IsNearlyZero()) return;
+
+	FRotator TargetRot = AimDirection.Rotation();
+
+	FRotator CurrentRot = GetActorRotation();
+
+	FRotator NewRot = FMath::RInterpTo(
+		CurrentRot,
+		TargetRot,
+		DeltaTime,
+		15.f // vitesse de rotation (feel Hades)
+	);
+
+	SetActorRotation(NewRot);
 }
 

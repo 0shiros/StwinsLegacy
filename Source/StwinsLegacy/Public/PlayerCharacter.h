@@ -27,14 +27,26 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
 	TObjectPtr<class UMyGameInstance> GameInstance;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerController")
+	TObjectPtr<class APCGame> PlayerController;
+	
+	FVector MoveInput;
+	FVector AimDirection;
 
 protected:
 	
 	virtual void BeginPlay() override;
+	
+	virtual void Tick(float DeltaTime) override;
 	
 	void InitialiseCharacterStats();
 	
 public:
 	
 	void Movement(FVector2D Value);
+	
+	void LookAtMouse();
+	
+	void UpdateRotation(float DeltaTime);
 };
