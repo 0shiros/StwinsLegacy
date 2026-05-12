@@ -101,7 +101,7 @@ void APlayerCharacter::UpdateRotation(float DeltaTime)
 		CurrentRot,
 		TargetRot,
 		DeltaTime,
-		15.f // vitesse de rotation (feel Hades)
+		25.f
 	);
 
 	SetActorRotation(NewRot);
