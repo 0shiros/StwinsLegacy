@@ -35,6 +35,8 @@ private :
 	
 	TMap<EAttackType, float> LastAttackTimes;
 	
+	float LastDashTime = -100.f;
+	
 protected:
 	
 	virtual void BeginPlay() override;
@@ -43,7 +45,9 @@ protected:
 	
 public:	
 	
-	bool CanAttack(EAttackType AttackType);
+	bool CanDash();
+	
+	bool CanAttack(EAttackType AttackType);	
 	
 	void Attack(EAttackType AttackType);
 	

@@ -51,6 +51,21 @@ void APlayerCharacter::InitialiseCharacterStats()
 	{
 		LastAttackTimes.Add(AttackType, -100.f);
 	}
+	
+	LastDashTime = -100.f;
+}
+
+bool APlayerCharacter::CanDash()
+{
+	float CurrentTime = GetWorld()->GetTimeSeconds();
+	
+	if (CurrentTime - LastDashTime >= PlayerStats.DashCooldown * PlayerStats.DashCooldownMultiplier)
+	{
+		LastDashTime = CurrentTime;
+		return true;
+	}
+	
+	return false;
 }
 
 bool APlayerCharacter::CanAttack(EAttackType AttackType)

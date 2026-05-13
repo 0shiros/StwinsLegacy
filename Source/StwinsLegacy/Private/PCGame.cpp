@@ -159,6 +159,12 @@ void APCGame::Dash(const FInputActionValue& Value)
 		return;
 	}
 	
+	if (!PlayerCharacter->CanDash())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Dash On Cooldown"));
+		return;
+	}
+	
 	PlayerCharacter->LaunchCharacter(AimDirection * PlayerCharacter->PlayerStats.BaseDashDistance, true, true);
 }
 
