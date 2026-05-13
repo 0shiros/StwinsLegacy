@@ -66,8 +66,8 @@ struct STWINSLEGACY_API FPlayerCharacterStats : public FBaseCharacterStats
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	TMap<EAttackType, float> KnockbackForces = {
-		{EAttackType::Basic, 100.f},
-		{EAttackType::Heavy, 200.f},
+		{EAttackType::Basic, 1000.f},
+		{EAttackType::Heavy, 2000.f},
 		{EAttackType::Special, 4000.f}
 	};
 };
