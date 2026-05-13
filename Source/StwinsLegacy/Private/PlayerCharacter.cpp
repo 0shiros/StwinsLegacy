@@ -109,69 +109,54 @@ void APlayerCharacter::Attack(EAttackType AttackType)
 		return;
 	}
 	
-	FVector RightBoundary = GetActorForwardVector()
-	.RotateAngleAxis(AttackRadius, FVector::UpVector);
-	FVector LeftBoundary = GetActorForwardVector()
-		.RotateAngleAxis(-AttackRadius, FVector::UpVector);
-
-	
 	TArray<TObjectPtr<AActor>> HitActors;
 	
-    for (FOverlapResult& Result : OverlapResults)
-    {
-        AActor* Actor = Result.GetActor();
-    	
-        if (!Actor || Actor == this) continue;
-    	
-        FVector ToActor = (Actor->GetActorLocation() - GetActorLocation()).GetSafeNormal();
+	FVector Forward = GetActorForwardVector();
 
-        bool bRightOfLeft  = FVector::CrossProduct(LeftBoundary,  ToActor).Z >= 0;
-        bool bLeftOfRight  = FVector::CrossProduct(RightBoundary, ToActor).Z <= 0;
+	for (FOverlapResult& Result : OverlapResults)
+	{
+		AActor* Actor = Result.GetActor();
 
-        if (bRightOfLeft && bLeftOfRight)
-        {
-            HitActors.AddUnique(Actor);
-        }
-    }
+		if (!Actor || Actor == this) continue;
+
+		FVector ToActor = (Actor->GetActorLocation() - GetActorLocation()).GetSafeNormal();
+
+		float AngleDeg = FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(Forward, ToActor)));
+
+		if (AngleDeg <= AttackRadius)
+		{
+			HitActors.AddUnique(Actor);
+		}
+	}
 	
 	for (TObjectPtr HitActor : HitActors)
 	{
 		if (IDamageable* Damageable = Cast<IDamageable>(HitActor))
 		{
-			Damageable->TakeDamage(PlayerStats.BaseAttack * AttackMultiplier, PlayerStats.KnockbackForces[AttackType], - GetActorForwardVector());
+			FVector KnockbackDir = (HitActor->GetActorLocation() - GetActorLocation()).GetSafeNormal();
+			Damageable->TakeDamage(PlayerStats.BaseAttack * AttackMultiplier, PlayerStats.KnockbackForces[AttackType], KnockbackDir);
 		}
 	}
 	
-    DrawDebugLine(
-		GetWorld(),
-		GetActorLocation(),
-		GetActorLocation() + RightBoundary * AttackRange,
-		FColor::Red,
-		false,
-		1.f,
-		0,
-		2.f
-	);
+	FVector RightEdge = GetActorLocation() + Forward.RotateAngleAxis( AttackRadius, FVector::UpVector) * AttackRange;
+	FVector LeftEdge  = GetActorLocation()  + Forward.RotateAngleAxis(-AttackRadius, FVector::UpVector) * AttackRange;
 
-	DrawDebugLine(
-		GetWorld(),
-		GetActorLocation(),
-		GetActorLocation() + LeftBoundary * AttackRange,
-		FColor::Red,
-		false,
-		1.f,
-		0,
-		2.f
-	);
+	DrawDebugLine(GetWorld(), GetActorLocation() , RightEdge, FColor::Red, false, 0.f, 0, 2.f);
+	DrawDebugLine(GetWorld(), GetActorLocation() , LeftEdge,  FColor::Red, false, 0.f, 0, 2.f);
 }
 
 void APlayerCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection)
 {	
-	CurrentHealth -= DamageAmount;
+	if (CurrentHealth <= 0)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Player Character Already Dead"));
+		return;
+	}
+	
+	CurrentHealth = FMath::Max(0.f, CurrentHealth - DamageAmount);
 	
 	if (CurrentHealth <= 0)
 	{
-		CurrentHealth = 0;
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Character Died"));
 	}
 }

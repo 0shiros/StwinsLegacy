@@ -37,12 +37,17 @@ void AEnemyCharacter::InitialiseCharacterStats()
 
 void AEnemyCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection)
 {	
-	CurrentHealth -= DamageAmount;
-	LaunchCharacter(-KnockbackDirection * KnockbackForce, true, true);
+	if (CurrentHealth <= 0)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Enemy %s Already Defeated"), *GetName()));
+		return;
+	}
+	
+    CurrentHealth = FMath::Max(0.f, CurrentHealth - DamageAmount);
+	LaunchCharacter(KnockbackDirection * KnockbackForce, true, true);
 	
 	if (CurrentHealth <= 0)
 	{
-		CurrentHealth = 0;
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Enemy %s Defeated"), *GetName()));
 		//Destroy();
 	}
