@@ -2,6 +2,7 @@
 
 #include "PlayerCharacter.h"
 
+#include "CollisionDebugDrawingPublic.h"
 #include "MyGameInstance.h"
 #include "MySaveGame.h"
 #include "PCGame.h"
@@ -12,7 +13,7 @@
 
 APlayerCharacter::APlayerCharacter()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
@@ -20,7 +21,7 @@ APlayerCharacter::APlayerCharacter()
 	SpringArm->bUsePawnControlRotation = true;
 	
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
-	PlayerCamera->SetupAttachment(SpringArm);
+	PlayerCamera->SetupAttachment(SpringArm);	
 }
 
 void APlayerCharacter::BeginPlay()
@@ -40,70 +41,37 @@ void APlayerCharacter::BeginPlay()
 	}
 }
 
-void APlayerCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	
-	LookAtMouse();
-	UpdateRotation(DeltaTime);
-}
-
 void APlayerCharacter::InitialiseCharacterStats()
 {
-	CharacterStats = GameInstance->GetCurrentSaveGame()->PlayerStats;
-	GetCharacterMovement()->MaxWalkSpeed = CharacterStats.BaseSpeed;
+	PlayerStats = GameInstance->GetCurrentSaveGame()->PlayerStats;
+	GetCharacterMovement()->MaxWalkSpeed = PlayerStats.BaseSpeed;
 }
 
-void APlayerCharacter::Movement(FVector2D Value)
+void APlayerCharacter::BasicAttack()
+{
+	
+}
+
+void APlayerCharacter::HeavyAttack()
+{
+	
+}
+
+void APlayerCharacter::SpecialAttack()
+{
+	
+}
+
+void APlayerCharacter::TakeDamage(float DamageAmount)
 {	
-	if (Value.IsNearlyZero()) return;
-
-	FVector Forward = GetActorForwardVector();
-	FVector Right = GetActorRightVector();
-
-	MoveInput = (Forward * Value.Y + Right * Value.X).GetSafeNormal();
-
-	AddMovementInput(MoveInput);
+	PlayerStats.BaseHealth -= DamageAmount;
+	
+	if (PlayerStats.BaseHealth <= 0)
+	{
+		PlayerStats.BaseHealth = 0;
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Character Died"));
+	}
 }
 
-void APlayerCharacter::LookAtMouse()
-{
-	if (!PlayerController) return;
 
-	float MouseX, MouseY;
-	PlayerController->GetMousePosition(MouseX, MouseY);
-
-	FVector WorldLocation, WorldDirection;
-	PlayerController->DeprojectScreenPositionToWorld(MouseX, MouseY, WorldLocation, WorldDirection);
-
-	FVector PlaneOrigin = GetActorLocation();
-	FVector PlaneNormal = FVector::UpVector;
-
-	FVector AimPoint = FMath::LinePlaneIntersection(
-		WorldLocation,
-		WorldLocation + WorldDirection * 10000.f,
-		PlaneOrigin,
-		PlaneNormal
-	);
-
-	AimDirection = (AimPoint - GetActorLocation()).GetSafeNormal();
-}
-
-void APlayerCharacter::UpdateRotation(float DeltaTime)
-{
-	if (AimDirection.IsNearlyZero()) return;
-
-	FRotator TargetRot = AimDirection.Rotation();
-
-	FRotator CurrentRot = GetActorRotation();
-
-	FRotator NewRot = FMath::RInterpTo(
-		CurrentRot,
-		TargetRot,
-		DeltaTime,
-		25.f
-	);
-
-	SetActorRotation(NewRot);
-}
 

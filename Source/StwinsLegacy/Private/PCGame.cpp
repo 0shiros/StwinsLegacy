@@ -35,6 +35,14 @@ void APCGame::BeginPlay()
 	}
 }
 
+void APCGame::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+	LookAtMouse();
+	UpdateRotation(DeltaTime);
+}
+
 void APCGame::SetupInputComponent()
 {
 	Super::SetupInputComponent();
@@ -84,11 +92,63 @@ void APCGame::Move(const FInputActionValue& Value)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Character Not Valid"));
 		return;
+	}	
+	
+	FVector2D Input = Value.Get<FVector2D>();
+	
+	if (Input.IsNearlyZero()) return;
+
+	FVector Forward = PlayerCharacter->GetActorForwardVector();
+	FVector Right = PlayerCharacter->GetActorRightVector();
+
+	MoveInput = (Forward * Input.Y + Right * Input.X).GetSafeNormal();
+
+	PlayerCharacter->AddMovementInput(MoveInput);
+}
+
+void APCGame::LookAtMouse()
+{
+	if (!PlayerCharacter)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Character Not Valid"));
+		return;
 	}
 	
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Move Action Triggered"));
+	float MouseX, MouseY;
+	GetMousePosition(MouseX, MouseY);
+
+	FVector WorldLocation, WorldDirection;
+	DeprojectScreenPositionToWorld(MouseX, MouseY, WorldLocation, WorldDirection);
+
+	FVector PlaneOrigin = PlayerCharacter->GetActorLocation();
+	FVector PlaneNormal = FVector::UpVector;
+
+	FVector AimPoint = FMath::LinePlaneIntersection(
+		WorldLocation,
+		WorldLocation + WorldDirection * 10000.f,
+		PlaneOrigin,
+		PlaneNormal
+	);
 	
-	PlayerCharacter->Movement(Value.Get<FVector2D>());
+	AimDirection = (AimPoint - PlayerCharacter->GetActorLocation()).GetSafeNormal();
+}
+
+void APCGame::UpdateRotation(float DeltaTime)
+{
+	if (!PlayerCharacter || AimDirection.IsNearlyZero()) return;
+
+	FRotator TargetRot = AimDirection.Rotation();
+
+	FRotator CurrentRot = PlayerCharacter->GetActorRotation();
+
+	FRotator NewRot = FMath::RInterpTo(
+		CurrentRot,
+		TargetRot,
+		DeltaTime,
+		25.f
+	);
+
+	PlayerCharacter->SetActorRotation(NewRot);
 }
 
 void APCGame::Dash(const FInputActionValue& Value)
@@ -99,7 +159,7 @@ void APCGame::Dash(const FInputActionValue& Value)
 		return;
 	}
 	
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Dash Action Triggered"));
+	PlayerCharacter->LaunchCharacter(AimDirection * PlayerCharacter->PlayerStats.BaseDashDistance, true, true);
 }
 
 void APCGame::BasicAttack(const FInputActionValue& Value)
@@ -110,7 +170,7 @@ void APCGame::BasicAttack(const FInputActionValue& Value)
 		return;
 	}
 	
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Basic Attack Action Triggered"));
+	PlayerCharacter->BasicAttack();
 }
 
 void APCGame::HeavyAttack(const FInputActionValue& Value)
@@ -121,7 +181,7 @@ void APCGame::HeavyAttack(const FInputActionValue& Value)
 		return;
 	}
 	
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Heavy Attack Action Triggered"));
+	PlayerCharacter->HeavyAttack();	
 }
 
 void APCGame::SpecialAttack(const FInputActionValue& Value)
@@ -132,7 +192,7 @@ void APCGame::SpecialAttack(const FInputActionValue& Value)
 		return;
 	}
 	
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Special Attack Action Triggered"));
+	PlayerCharacter->SpecialAttack();
 }
 
 void APCGame::Interact(const FInputActionValue& Value)

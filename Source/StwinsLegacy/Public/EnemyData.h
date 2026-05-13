@@ -24,5 +24,5 @@ public:
 	int SoulsDropped = 0;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	FEnemyCharacterStats CharacterStats;
+	FEnemyCharacterStats EnemyStats;
 };

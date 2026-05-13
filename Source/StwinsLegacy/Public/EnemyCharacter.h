@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
+#include "EnemyCharacterStats.h"
 #include "EnemyCharacter.generated.h"
 
 UCLASS(Abstract)
@@ -17,7 +18,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	TObjectPtr<class UEnemyData> EnemyData;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	FEnemyCharacterStats EnemyStats;
+	
 protected:
 	virtual void BeginPlay() override;
+	
+	void InitialiseCharacterStats();
 
+public:
+	virtual void TakeDamage(float DamageAmount) override;
 };

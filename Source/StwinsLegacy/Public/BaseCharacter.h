@@ -3,15 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Damageable.h"
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
 UCLASS(Abstract)
-class STWINSLEGACY_API ABaseCharacter : public ACharacter
+class STWINSLEGACY_API ABaseCharacter : public ACharacter, public IDamageable
 {
 	GENERATED_BODY()
 
 public:
-	ABaseCharacter();
+	ABaseCharacter();	
 	
+	virtual void TakeDamage(float DamageAmount) override PURE_VIRTUAL(ABaseCharacter::TakeDamage, );
 };

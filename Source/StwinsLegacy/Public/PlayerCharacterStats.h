@@ -12,7 +12,7 @@ struct STWINSLEGACY_API FPlayerCharacterStats : public FBaseCharacterStats
 	GENERATED_BODY()
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	int BaseDashDistance = 600;
+	int BaseDashDistance = 2000;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float DashCooldown = 1.0f;
@@ -27,6 +27,9 @@ struct STWINSLEGACY_API FPlayerCharacterStats : public FBaseCharacterStats
 	int HeavyAttackRange = 100;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	int HeavyAttackMultiplier = 2;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float SpecialAttackDelay = 1.0f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
@@ -34,4 +37,7 @@ struct STWINSLEGACY_API FPlayerCharacterStats : public FBaseCharacterStats
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int SpecialAttackRange = 100;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	int SpecialAttackMultiplier = 3;
 };

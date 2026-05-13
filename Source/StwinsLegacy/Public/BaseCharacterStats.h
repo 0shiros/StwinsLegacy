@@ -14,17 +14,23 @@ struct STWINSLEGACY_API FBaseCharacterStats
 	int BaseHealth = 100;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	int MaxHealth = 100;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float BaseSpeed = 800.f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int BaseAttack = 10;	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float AttackDelay = 1.0f;
+	float BasicAttackDelay = 1.0f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float AttackRadius = 100.f;
+	float BasicAttackRadius = 100.f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	int AttackRange = 100;
+	int BasicAttackRange = 100;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	int BasicAttackMultiplier = 1;
 };

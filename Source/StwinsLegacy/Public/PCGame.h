@@ -45,15 +45,25 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	TObjectPtr<UInputAction> PauseMenuAction;
 	
+	FVector MoveInput;
+	
+	FVector AimDirection;
+	
 private:
 	
-	virtual void BeginPlay() override;		
+	virtual void BeginPlay() override;	
+	
+	virtual void Tick(float DeltaTime) override;
 	
 	virtual void SetupInputComponent() override;	
 	
 public :	
 	
 	void Move(const FInputActionValue& Value);
+	
+	void LookAtMouse();
+	
+	void UpdateRotation(float DeltaTime);
 	
 	void Dash(const FInputActionValue& Value);
 	
@@ -66,4 +76,6 @@ public :
 	void Interact(const FInputActionValue& Value);
 	
 	void PauseMenu(const FInputActionValue& Value);
+	
+	
 };

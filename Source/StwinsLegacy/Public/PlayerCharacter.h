@@ -23,30 +23,25 @@ public:
 	TObjectPtr<class USpringArmComponent> SpringArm;
 			
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	FPlayerCharacterStats CharacterStats;
+	FPlayerCharacterStats PlayerStats;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
 	TObjectPtr<class UMyGameInstance> GameInstance;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerController")
-	TObjectPtr<class APCGame> PlayerController;
-	
-	FVector MoveInput;
-	FVector AimDirection;
+	TObjectPtr<class APCGame> PlayerController;	
 
 protected:
 	
 	virtual void BeginPlay() override;
 	
-	virtual void Tick(float DeltaTime) override;
-	
 	void InitialiseCharacterStats();
 	
 public:
 	
-	void Movement(FVector2D Value);
+	void BasicAttack();
+	void HeavyAttack();
+	void SpecialAttack();
 	
-	void LookAtMouse();
-	
-	void UpdateRotation(float DeltaTime);
+	void virtual TakeDamage(float DamageAmount) override;
 };
