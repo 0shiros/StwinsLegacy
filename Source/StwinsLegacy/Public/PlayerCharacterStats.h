@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AttackType.h"
 #include "BaseCharacterStats.h"
 #include "PlayerCharacterStats.generated.h"
 
@@ -15,29 +16,47 @@ struct STWINSLEGACY_API FPlayerCharacterStats : public FBaseCharacterStats
 	int BaseDashDistance = 2000;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float DashCooldown = 1.0f;
+	float DashCooldown = 1.0f;	
+		
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	TMap<EAttackType, float> AttackMultipliers = {
+		{EAttackType::Basic, 1.f},
+		{EAttackType::Heavy, 2.f},
+		{EAttackType::Special, 3.f}
+	};
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float HeavyAttackDelay = 1.0f;
+	TMap<EAttackType, float> AttackCooldowns = {
+		{EAttackType::Basic, 1.0f},
+		{EAttackType::Heavy, 2.0f},
+		{EAttackType::Special, 5.0f}
+	};
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float HeavyAttackRadius = 100.f;
+	TMap<EAttackType, float> AttackCooldownMultipliers = {
+		{EAttackType::Basic, 1.0f},
+		{EAttackType::Heavy, 1.0f},
+		{EAttackType::Special, 1.0f}
+	};
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	int HeavyAttackRange = 100;
+	TMap<EAttackType, float> AttackRadius = {
+		{EAttackType::Basic, 40.f},
+		{EAttackType::Heavy, 90.f},
+		{EAttackType::Special, 180.f}
+	};
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	int HeavyAttackMultiplier = 2;
+	TMap<EAttackType, float> AttackRanges = {
+		{EAttackType::Basic, 200.f},
+		{EAttackType::Heavy, 300.f},
+		{EAttackType::Special, 500.f}
+	};
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float SpecialAttackDelay = 1.0f;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float SpecialAttackRadius = 100.f;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	int SpecialAttackRange = 100;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	int SpecialAttackMultiplier = 3;
+	TMap<EAttackType, float> AttackRangeMultipliers = {
+		{EAttackType::Basic, 1.f},
+		{EAttackType::Heavy, 1.f},
+		{EAttackType::Special, 1.f}
+	};
 };

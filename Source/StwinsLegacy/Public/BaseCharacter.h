@@ -13,7 +13,10 @@ class STWINSLEGACY_API ABaseCharacter : public ACharacter, public IDamageable
 	GENERATED_BODY()
 
 public:
-	ABaseCharacter();	
+	ABaseCharacter();		
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	int CurrentHealth = 100;
 	
 	virtual void TakeDamage(float DamageAmount) override PURE_VIRTUAL(ABaseCharacter::TakeDamage, );
 };

@@ -37,13 +37,13 @@ void AEnemyCharacter::InitialiseCharacterStats()
 
 void AEnemyCharacter::TakeDamage(float DamageAmount)
 {	
-	EnemyStats.BaseHealth -= DamageAmount;
+	CurrentHealth -= DamageAmount;
 	
-	if (EnemyStats.BaseHealth <= 0)
+	if (CurrentHealth <= 0)
 	{
-		EnemyStats.BaseHealth = 0;
+		CurrentHealth = 0;
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Enemy %s Defeated"), *GetName()));
-		Destroy();
+		//Destroy();
 	}
 }
 

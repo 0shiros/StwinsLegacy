@@ -170,7 +170,7 @@ void APCGame::BasicAttack(const FInputActionValue& Value)
 		return;
 	}
 	
-	PlayerCharacter->BasicAttack();
+	PlayerCharacter->Attack(EAttackType::Basic);
 }
 
 void APCGame::HeavyAttack(const FInputActionValue& Value)
@@ -181,7 +181,7 @@ void APCGame::HeavyAttack(const FInputActionValue& Value)
 		return;
 	}
 	
-	PlayerCharacter->HeavyAttack();	
+	PlayerCharacter->Attack(EAttackType::Heavy);
 }
 
 void APCGame::SpecialAttack(const FInputActionValue& Value)
@@ -192,7 +192,7 @@ void APCGame::SpecialAttack(const FInputActionValue& Value)
 		return;
 	}
 	
-	PlayerCharacter->SpecialAttack();
+	PlayerCharacter->Attack(EAttackType::Special);
 }
 
 void APCGame::Interact(const FInputActionValue& Value)

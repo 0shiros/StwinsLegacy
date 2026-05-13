@@ -29,19 +29,23 @@ public:
 	TObjectPtr<class UMyGameInstance> GameInstance;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerController")
-	TObjectPtr<class APCGame> PlayerController;	
-
+	TObjectPtr<class APCGame> PlayerController;		
+	
+private :
+	
+	TMap<EAttackType, float> LastAttackTimes;
+	
 protected:
 	
 	virtual void BeginPlay() override;
 	
 	void InitialiseCharacterStats();
 	
-public:
+public:	
 	
-	void BasicAttack();
-	void HeavyAttack();
-	void SpecialAttack();
+	bool CanAttack(EAttackType AttackType);
+	
+	void Attack(EAttackType AttackType);
 	
 	void virtual TakeDamage(float DamageAmount) override;
 };
