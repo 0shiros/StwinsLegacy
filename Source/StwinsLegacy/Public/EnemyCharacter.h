@@ -27,5 +27,5 @@ protected:
 	void InitialiseCharacterStats();
 
 public:
-	virtual void TakeDamage(float DamageAmount, float KnockbackForce) override;
+	virtual void TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection) override;
 };

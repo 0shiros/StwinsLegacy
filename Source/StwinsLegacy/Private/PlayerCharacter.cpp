@@ -138,20 +138,34 @@ void APlayerCharacter::Attack(EAttackType AttackType)
 	{
 		if (IDamageable* Damageable = Cast<IDamageable>(HitActor))
 		{
-			Damageable->TakeDamage(PlayerStats.BaseAttack * AttackMultiplier, PlayerStats.KnockbackForces[AttackType]);
+			Damageable->TakeDamage(PlayerStats.BaseAttack * AttackMultiplier, PlayerStats.KnockbackForces[AttackType], - GetActorForwardVector());
 		}
 	}
 	
-    DrawDebugLine(GetWorld(), GetActorLocation(),
-        GetActorLocation() + RightBoundary * AttackRange,
-        FColor::Green, false, 1.f);
-	
-    DrawDebugLine(GetWorld(), GetActorLocation(),
-        GetActorLocation() + LeftBoundary * AttackRange,
-        FColor::Green, false, 1.f);
+    DrawDebugLine(
+		GetWorld(),
+		GetActorLocation(),
+		GetActorLocation() + RightBoundary * AttackRange,
+		FColor::Red,
+		false,
+		1.f,
+		0,
+		2.f
+	);
+
+	DrawDebugLine(
+		GetWorld(),
+		GetActorLocation(),
+		GetActorLocation() + LeftBoundary * AttackRange,
+		FColor::Red,
+		false,
+		1.f,
+		0,
+		2.f
+	);
 }
 
-void APlayerCharacter::TakeDamage(float DamageAmount, float KnockbackForce)
+void APlayerCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection)
 {	
 	CurrentHealth -= DamageAmount;
 	

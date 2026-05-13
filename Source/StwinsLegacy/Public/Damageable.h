@@ -23,5 +23,5 @@ class STWINSLEGACY_API IDamageable
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	
-	void virtual TakeDamage(float DamageAmount, float KnockbackForce) = 0;
+	void virtual TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection) = 0;
 };

@@ -18,5 +18,5 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int CurrentHealth = 100;
 	
-	virtual void TakeDamage(float DamageAmount) override PURE_VIRTUAL(ABaseCharacter::TakeDamage, );
+	virtual void TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection) override PURE_VIRTUAL(ABaseCharacter::TakeDamage, );
 };

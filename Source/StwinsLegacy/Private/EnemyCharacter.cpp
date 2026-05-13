@@ -35,10 +35,10 @@ void AEnemyCharacter::InitialiseCharacterStats()
 	GetCharacterMovement()->MaxWalkSpeed = EnemyStats.BaseSpeed;	
 }
 
-void AEnemyCharacter::TakeDamage(float DamageAmount, float KnockbackForce)
+void AEnemyCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection)
 {	
 	CurrentHealth -= DamageAmount;
-	LaunchCharacter(-GetActorForwardVector() * KnockbackForce, true, true);
+	LaunchCharacter(-KnockbackDirection * KnockbackForce, true, true);
 	
 	if (CurrentHealth <= 0)
 	{
