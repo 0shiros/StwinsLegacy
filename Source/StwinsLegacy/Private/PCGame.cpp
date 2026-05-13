@@ -96,8 +96,6 @@ void APCGame::Move(const FInputActionValue& Value)
 	
 	FVector2D Input = Value.Get<FVector2D>();
 	
-	if (Input.IsNearlyZero()) return;
-
 	FVector Forward = FVector::ForwardVector;
 	FVector Right = FVector::RightVector;
 
@@ -165,7 +163,7 @@ void APCGame::Dash(const FInputActionValue& Value)
 		return;
 	}
 	
-	PlayerCharacter->LaunchCharacter(AimDirection * PlayerCharacter->PlayerStats.BaseDashDistance, true, true);
+	PlayerCharacter->LaunchCharacter(MoveInput * PlayerCharacter->PlayerStats.BaseDashDistance, true, true);
 }
 
 void APCGame::BasicAttack(const FInputActionValue& Value)

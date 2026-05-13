@@ -138,7 +138,7 @@ void APlayerCharacter::Attack(EAttackType AttackType)
 	{
 		if (IDamageable* Damageable = Cast<IDamageable>(HitActor))
 		{
-			Damageable->TakeDamage(PlayerStats.BaseAttack * AttackMultiplier);
+			Damageable->TakeDamage(PlayerStats.BaseAttack * AttackMultiplier, PlayerStats.KnockbackForces[AttackType]);
 		}
 	}
 	
@@ -151,7 +151,7 @@ void APlayerCharacter::Attack(EAttackType AttackType)
         FColor::Green, false, 1.f);
 }
 
-void APlayerCharacter::TakeDamage(float DamageAmount)
+void APlayerCharacter::TakeDamage(float DamageAmount, float KnockbackForce)
 {	
 	CurrentHealth -= DamageAmount;
 	

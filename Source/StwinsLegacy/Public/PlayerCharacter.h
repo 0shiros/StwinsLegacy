@@ -51,5 +51,5 @@ public:
 	
 	void Attack(EAttackType AttackType);
 	
-	void virtual TakeDamage(float DamageAmount) override;
+	void virtual TakeDamage(float DamageAmount, float KnockbackForce) override;
 };
