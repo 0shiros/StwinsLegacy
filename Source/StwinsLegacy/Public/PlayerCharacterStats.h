@@ -47,7 +47,7 @@ struct STWINSLEGACY_API FPlayerCharacterStats : public FBaseCharacterStats
 	TMap<EAttackType, float> AttackRadius = {
 		{EAttackType::Basic, 40.f},
 		{EAttackType::Heavy, 90.f},
-		{EAttackType::Special, 180.f}
+		{EAttackType::Special, 120.f}
 	};
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")

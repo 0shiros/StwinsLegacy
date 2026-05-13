@@ -98,8 +98,8 @@ void APCGame::Move(const FInputActionValue& Value)
 	
 	if (Input.IsNearlyZero()) return;
 
-	FVector Forward = PlayerCharacter->GetActorForwardVector();
-	FVector Right = PlayerCharacter->GetActorRightVector();
+	FVector Forward = FVector::ForwardVector;
+	FVector Right = FVector::RightVector;
 
 	MoveInput = (Forward * Input.Y + Right * Input.X).GetSafeNormal();
 
