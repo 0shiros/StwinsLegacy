@@ -6,6 +6,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "PlayerCharacter.h"
+#include "Camera/CameraComponent.h"
 
 void APCGame::BeginPlay()
 {
@@ -37,10 +38,7 @@ void APCGame::BeginPlay()
 
 void APCGame::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
-	
-	LookAtMouse();
-	UpdateRotation(DeltaTime);
+	Super::Tick(DeltaTime);	
 }
 
 void APCGame::SetupInputComponent()
@@ -94,59 +92,17 @@ void APCGame::Move(const FInputActionValue& Value)
 		return;
 	}	
 	
-	FVector2D Input = Value.Get<FVector2D>();
-	
-	FVector Forward = FVector::ForwardVector;
-	FVector Right = FVector::RightVector;
+	const FVector2D Input = Value.Get<FVector2D>();
+	if (Input.IsNearlyZero()) return;
 
-	MoveInput = (Forward * Input.Y + Right * Input.X).GetSafeNormal();
+	const FRotator CameraYaw(0.f, PlayerCharacter->PlayerCamera->GetComponentRotation().Yaw, 0.f);
+	const FMatrix CameraMatrix = FRotationMatrix(CameraYaw);
 
-	PlayerCharacter->AddMovementInput(MoveInput);
-}
+	const FVector Forward = CameraMatrix.GetUnitAxis(EAxis::X);
+	const FVector Right   = CameraMatrix.GetUnitAxis(EAxis::Y);
 
-void APCGame::LookAtMouse()
-{
-	if (!PlayerCharacter)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Character Not Valid"));
-		return;
-	}
-	
-	float MouseX, MouseY;
-	GetMousePosition(MouseX, MouseY);
-
-	FVector WorldLocation, WorldDirection;
-	DeprojectScreenPositionToWorld(MouseX, MouseY, WorldLocation, WorldDirection);
-
-	FVector PlaneOrigin = PlayerCharacter->GetActorLocation();
-	FVector PlaneNormal = FVector::UpVector;
-
-	FVector AimPoint = FMath::LinePlaneIntersection(
-		WorldLocation,
-		WorldLocation + WorldDirection * 10000.f,
-		PlaneOrigin,
-		PlaneNormal
-	);
-	
-	AimDirection = (AimPoint - PlayerCharacter->GetActorLocation()).GetSafeNormal();
-}
-
-void APCGame::UpdateRotation(float DeltaTime)
-{
-	if (!PlayerCharacter || AimDirection.IsNearlyZero()) return;
-
-	FRotator TargetRot = AimDirection.Rotation();
-
-	FRotator CurrentRot = PlayerCharacter->GetActorRotation();
-
-	FRotator NewRot = FMath::RInterpTo(
-		CurrentRot,
-		TargetRot,
-		DeltaTime,
-		25.f
-	);
-
-	PlayerCharacter->SetActorRotation(NewRot);
+	PlayerCharacter->AddMovementInput(Forward, Input.Y);
+	PlayerCharacter->AddMovementInput(Right,   Input.X);
 }
 
 void APCGame::Dash(const FInputActionValue& Value)

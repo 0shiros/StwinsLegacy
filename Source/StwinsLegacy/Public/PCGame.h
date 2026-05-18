@@ -59,11 +59,7 @@ private:
 	
 public :	
 	
-	void Move(const FInputActionValue& Value);
-	
-	void LookAtMouse();
-	
-	void UpdateRotation(float DeltaTime);
+	void Move(const FInputActionValue& Value);	
 	
 	void Dash(const FInputActionValue& Value);
 	
