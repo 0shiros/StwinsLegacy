@@ -35,7 +35,7 @@ private :
 	
 	TMap<EAttackType, float> LastAttackTimes;
 	
-	float LastDashTime = -100.f;
+	float LastDashTime = -100.f; //To allow instant dash at start
 	
 protected:
 	

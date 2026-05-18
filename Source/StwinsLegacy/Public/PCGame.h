@@ -53,8 +53,6 @@ private:
 	
 	virtual void BeginPlay() override;	
 	
-	virtual void Tick(float DeltaTime) override;
-	
 	virtual void SetupInputComponent() override;	
 	
 public :	
@@ -62,6 +60,8 @@ public :
 	void Move(const FInputActionValue& Value);	
 	
 	void Dash(const FInputActionValue& Value);
+	
+	void OrientCharacterToAttack();
 	
 	void BasicAttack(const FInputActionValue& Value);
 	

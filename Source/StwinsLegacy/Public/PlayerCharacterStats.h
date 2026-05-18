@@ -13,14 +13,13 @@ struct STWINSLEGACY_API FPlayerCharacterStats : public FBaseCharacterStats
 	GENERATED_BODY()
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	int BaseDashDistance = 2000;
+	int BaseDashDistance = 4000;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float DashCooldown = 1.0f;	
+	float DashCooldown = 0.5f;	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float DashCooldownMultiplier = 1.0f;
-
 		
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	TMap<EAttackType, float> AttackMultipliers = {
@@ -31,8 +30,8 @@ struct STWINSLEGACY_API FPlayerCharacterStats : public FBaseCharacterStats
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	TMap<EAttackType, float> AttackCooldowns = {
-		{EAttackType::Basic, 1.0f},
-		{EAttackType::Heavy, 2.0f},
+		{EAttackType::Basic, 0.2f}, // Animation duration
+		{EAttackType::Heavy, 1.0f}, // Animation duration
 		{EAttackType::Special, 5.0f}
 	};
 	

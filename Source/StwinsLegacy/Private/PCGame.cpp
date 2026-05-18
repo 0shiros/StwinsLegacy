@@ -34,11 +34,10 @@ void APCGame::BeginPlay()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Local Player Not Valid"));
 	}
-}
-
-void APCGame::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);	
+	
+	SetShowMouseCursor(true);
+	
+	MoveInput = PlayerCharacter->GetActorForwardVector();
 }
 
 void APCGame::SetupInputComponent()
@@ -54,7 +53,7 @@ void APCGame::SetupInputComponent()
 		
 		if (DashAction)
 		{
-			EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Triggered, this, &APCGame::Dash);
+			EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Started, this, &APCGame::Dash);
 		}
 		
 		if (BasicAttackAction)
@@ -92,17 +91,19 @@ void APCGame::Move(const FInputActionValue& Value)
 		return;
 	}	
 	
-	const FVector2D Input = Value.Get<FVector2D>();
+	FVector2D Input = Value.Get<FVector2D>();
 	if (Input.IsNearlyZero()) return;
 
-	const FRotator CameraYaw(0.f, PlayerCharacter->PlayerCamera->GetComponentRotation().Yaw, 0.f);
-	const FMatrix CameraMatrix = FRotationMatrix(CameraYaw);
+	FRotator CameraYaw(0.f, PlayerCharacter->PlayerCamera->GetComponentRotation().Yaw, 0.f);
+	FMatrix CameraMatrix = FRotationMatrix(CameraYaw);
 
-	const FVector Forward = CameraMatrix.GetUnitAxis(EAxis::X);
-	const FVector Right   = CameraMatrix.GetUnitAxis(EAxis::Y);
-
-	PlayerCharacter->AddMovementInput(Forward, Input.Y);
-	PlayerCharacter->AddMovementInput(Right,   Input.X);
+	FVector Forward = CameraMatrix.GetUnitAxis(EAxis::X);
+	FVector Right   = CameraMatrix.GetUnitAxis(EAxis::Y);
+	
+	MoveInput = Forward * Input.Y + Right * Input.X;
+	MoveInput.Normalize();
+	
+	PlayerCharacter->AddMovementInput(MoveInput);
 }
 
 void APCGame::Dash(const FInputActionValue& Value)
@@ -119,7 +120,30 @@ void APCGame::Dash(const FInputActionValue& Value)
 		return;
 	}
 	
-	PlayerCharacter->LaunchCharacter(MoveInput * PlayerCharacter->PlayerStats.BaseDashDistance, true, true);
+	PlayerCharacter->LaunchCharacter( MoveInput * PlayerCharacter->PlayerStats.BaseDashDistance, true, true);
+}
+
+void APCGame::OrientCharacterToAttack()
+{	
+	float MouseX, MouseY;
+	GetMousePosition(MouseX, MouseY);
+
+	FVector WorldLocation, WorldDirection;
+	DeprojectScreenPositionToWorld(MouseX, MouseY, WorldLocation, WorldDirection);
+
+	FVector PlaneOrigin = PlayerCharacter->GetActorLocation();
+	FVector PlaneNormal = FVector::UpVector;
+
+	FVector AimPoint = FMath::LinePlaneIntersection(
+		WorldLocation,
+		WorldLocation + WorldDirection * 10000.f,
+		PlaneOrigin,
+		PlaneNormal
+	);
+	
+	AimDirection = (AimPoint - PlayerCharacter->GetActorLocation()).GetSafeNormal();
+	
+	PlayerCharacter->SetActorRotation(FRotator(0.f, AimDirection.Rotation().Yaw, 0.f));
 }
 
 void APCGame::BasicAttack(const FInputActionValue& Value)
@@ -130,6 +154,7 @@ void APCGame::BasicAttack(const FInputActionValue& Value)
 		return;
 	}
 	
+	OrientCharacterToAttack();
 	PlayerCharacter->Attack(EAttackType::Basic);
 }
 
@@ -141,6 +166,7 @@ void APCGame::HeavyAttack(const FInputActionValue& Value)
 		return;
 	}
 	
+	OrientCharacterToAttack();
 	PlayerCharacter->Attack(EAttackType::Heavy);
 }
 
@@ -152,6 +178,7 @@ void APCGame::SpecialAttack(const FInputActionValue& Value)
 		return;
 	}
 	
+	OrientCharacterToAttack();
 	PlayerCharacter->Attack(EAttackType::Special);
 }
 
