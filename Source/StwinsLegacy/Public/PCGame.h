@@ -65,13 +65,13 @@ public :
 	
 	void BasicAttack(const FInputActionValue& Value);
 	
+	void BasicAttackRelease(const FInputActionValue& Value);
+	
 	void HeavyAttack(const FInputActionValue& Value);
 	
 	void SpecialAttack(const FInputActionValue& Value);
 	
 	void Interact(const FInputActionValue& Value);
 	
-	void PauseMenu(const FInputActionValue& Value);
-	
-	
+	void PauseMenu(const FInputActionValue& Value);	
 };

@@ -16,21 +16,34 @@ public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
 	
+	//Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<class UCameraComponent> PlayerCamera;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")	
 	TObjectPtr<class USpringArmComponent> SpringArm;
 			
+	//Stats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	FPlayerCharacterStats PlayerStats;
 	
+	//References	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
 	TObjectPtr<class UMyGameInstance> GameInstance;
+			
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Attack")
+	bool bIsAttacking = false;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerController")
-	TObjectPtr<class APCGame> PlayerController;		
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Attack")
+	bool bSaveAttack = false;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Attack")
+	int AttackComboCount = 0;
+	
+	//Animations
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimationBasicAttack")
+	TArray<TObjectPtr<UAnimMontage>> BasicAttackMontages;
+		
 private :
 	
 	TMap<EAttackType, float> LastAttackTimes;
@@ -49,7 +62,19 @@ public:
 	
 	bool CanAttack(EAttackType AttackType);	
 	
+	UFUNCTION(BlueprintCallable, Category = "Attack")
 	void Attack(EAttackType AttackType);
+	
+	UFUNCTION(BlueprintCallable, Category = "Animation")
+	void BasicAttackAnimationNotify();
+	
+	UFUNCTION(BlueprintCallable, Category = "Basic Attack")
+	void ComboBasicAttackSave();
+	
+	void SwitchAnimMontage();
+	
+	UFUNCTION(BlueprintCallable, Category = "Basic Attack")
+	void ResetBasicAttackCombo();
 	
 	void virtual TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection) override;
 };

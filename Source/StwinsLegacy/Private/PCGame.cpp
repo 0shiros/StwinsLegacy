@@ -21,6 +21,7 @@ void APCGame::BeginPlay()
 	PlayerCharacter = Cast<APlayerCharacter>(GetPawn());
 	
 	FInputModeGameOnly InputMode;
+	InputMode.SetConsumeCaptureMouseDown(false);
 	SetInputMode(InputMode);
 	
 	if (TObjectPtr<ULocalPlayer> LocalPlayer = GetLocalPlayer())
@@ -58,7 +59,8 @@ void APCGame::SetupInputComponent()
 		
 		if (BasicAttackAction)
 		{
-			EnhancedInputComponent->BindAction(BasicAttackAction, ETriggerEvent::Triggered, this, &APCGame::BasicAttack);
+			EnhancedInputComponent->BindAction(BasicAttackAction, ETriggerEvent::Started, this, &APCGame::BasicAttack);
+			EnhancedInputComponent->BindAction(BasicAttackAction, ETriggerEvent::Completed, this, &APCGame::BasicAttackRelease);
 		}
 		
 		if (HeavyAttackAction)
@@ -152,10 +154,21 @@ void APCGame::BasicAttack(const FInputActionValue& Value)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Character Not Valid"));
 		return;
-	}
+	}	
 	
 	OrientCharacterToAttack();
-	PlayerCharacter->Attack(EAttackType::Basic);
+	PlayerCharacter->BasicAttackAnimationNotify();
+}
+
+void APCGame::BasicAttackRelease(const FInputActionValue& Value)
+{	
+	if (!PlayerCharacter)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Character Not Valid"));
+		return;
+	}	
+	
+	PlayerCharacter->bSaveAttack = false;
 }
 
 void APCGame::HeavyAttack(const FInputActionValue& Value)

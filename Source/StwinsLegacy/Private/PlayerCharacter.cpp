@@ -4,7 +4,6 @@
 
 #include "MyGameInstance.h"
 #include "MySaveGame.h"
-#include "PCGame.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/OverlapResult.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -29,7 +28,6 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	GameInstance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	PlayerController = Cast<APCGame>(GetController());
 	
 	if (GameInstance)
 	{
@@ -75,6 +73,7 @@ bool APlayerCharacter::CanAttack(EAttackType AttackType)
 	if (CurrentTime - LastAttackTimes[AttackType] >= PlayerStats.AttackCooldowns[AttackType] * PlayerStats.AttackCooldownMultipliers[AttackType])
 	{
 		LastAttackTimes[AttackType] = CurrentTime;
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Attack %d Executed"), (int)AttackType));
 		return true;
 	}
 	
@@ -143,6 +142,58 @@ void APlayerCharacter::Attack(EAttackType AttackType)
 
 	DrawDebugLine(GetWorld(), GetActorLocation() , RightEdge, FColor::Red, false, 0.f, 0, 2.f);
 	DrawDebugLine(GetWorld(), GetActorLocation() , LeftEdge,  FColor::Red, false, 0.f, 0, 2.f);
+}
+
+void APlayerCharacter::BasicAttackAnimationNotify()
+{
+	if (bIsAttacking)
+	{
+		bSaveAttack = true;
+	}
+	else
+	{
+		bIsAttacking = true;
+		SwitchAnimMontage();
+	}
+}
+
+void APlayerCharacter::ComboBasicAttackSave()
+{
+	if (bSaveAttack)
+	{
+		bSaveAttack = false;
+		SwitchAnimMontage();
+	}
+}
+
+void APlayerCharacter::SwitchAnimMontage()
+{
+	switch (AttackComboCount)
+	{
+	case 0:
+		AttackComboCount = 1;
+		PlayAnimMontage(BasicAttackMontages[0]);
+		break;
+	case 1:
+		AttackComboCount = 2;
+		PlayAnimMontage(BasicAttackMontages[1]);
+		break;
+	case 2:
+		AttackComboCount = 3;
+		PlayAnimMontage(BasicAttackMontages[2]);
+		break;
+	case 3: 
+		AttackComboCount = 0;
+		PlayAnimMontage(BasicAttackMontages[3]);
+		break;
+	}
+}
+
+void APlayerCharacter::ResetBasicAttackCombo()
+{
+	bIsAttacking = false;
+	bSaveAttack = false;
+	AttackComboCount = 0;
 }
 
 void APlayerCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection)

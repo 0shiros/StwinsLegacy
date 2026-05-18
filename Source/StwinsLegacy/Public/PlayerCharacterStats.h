@@ -30,7 +30,7 @@ struct STWINSLEGACY_API FPlayerCharacterStats : public FBaseCharacterStats
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	TMap<EAttackType, float> AttackCooldowns = {
-		{EAttackType::Basic, 0.2f}, // Animation duration
+		{EAttackType::Basic, 0.4f}, // Animation duration
 		{EAttackType::Heavy, 1.0f}, // Animation duration
 		{EAttackType::Special, 5.0f}
 	};
