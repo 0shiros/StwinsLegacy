@@ -61,16 +61,17 @@ void APCGame::SetupInputComponent()
 		{
 			EnhancedInputComponent->BindAction(BasicAttackAction, ETriggerEvent::Started, this, &APCGame::BasicAttack);
 			EnhancedInputComponent->BindAction(BasicAttackAction, ETriggerEvent::Completed, this, &APCGame::BasicAttackRelease);
+			EnhancedInputComponent->BindAction(BasicAttackAction, ETriggerEvent::Triggered, this, &APCGame::OrientCharacterToAttack);
 		}
 		
 		if (HeavyAttackAction)
 		{
-			EnhancedInputComponent->BindAction(HeavyAttackAction, ETriggerEvent::Triggered, this, &APCGame::HeavyAttack);
+			EnhancedInputComponent->BindAction(HeavyAttackAction, ETriggerEvent::Started, this, &APCGame::HeavyAttack);
 		}
 		
 		if (SpecialAttackAction)
 		{
-			EnhancedInputComponent->BindAction(SpecialAttackAction, ETriggerEvent::Triggered, this, &APCGame::SpecialAttack);
+			EnhancedInputComponent->BindAction(SpecialAttackAction, ETriggerEvent::Started, this, &APCGame::SpecialAttack);
 		}
 		
 		if (InteractAction)
@@ -156,7 +157,7 @@ void APCGame::BasicAttack(const FInputActionValue& Value)
 		return;
 	}	
 	
-	OrientCharacterToAttack();
+	PlayerCharacter->bIsHoldingAttack = true;
 	PlayerCharacter->BasicAttackAnimationNotify();
 }
 
@@ -168,7 +169,7 @@ void APCGame::BasicAttackRelease(const FInputActionValue& Value)
 		return;
 	}	
 	
-	PlayerCharacter->bSaveAttack = false;
+	PlayerCharacter->bIsHoldingAttack = false;
 }
 
 void APCGame::HeavyAttack(const FInputActionValue& Value)
@@ -180,7 +181,7 @@ void APCGame::HeavyAttack(const FInputActionValue& Value)
 	}
 	
 	OrientCharacterToAttack();
-	PlayerCharacter->Attack(EAttackType::Heavy);
+	PlayerCharacter->HeavyAttackAnimationNotify();
 }
 
 void APCGame::SpecialAttack(const FInputActionValue& Value)
@@ -192,7 +193,7 @@ void APCGame::SpecialAttack(const FInputActionValue& Value)
 	}
 	
 	OrientCharacterToAttack();
-	PlayerCharacter->Attack(EAttackType::Special);
+	PlayerCharacter->BasicAttack(EAttackType::Special);
 }
 
 void APCGame::Interact(const FInputActionValue& Value)

@@ -28,23 +28,25 @@ struct STWINSLEGACY_API FPlayerCharacterStats : public FBaseCharacterStats
 		{EAttackType::Special, 3.f}
 	};
 	
+	//Animation speed multipliers
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	TMap<EAttackType, float> AttackCooldowns = {
-		{EAttackType::Basic, 0.4f}, // Animation duration
-		{EAttackType::Heavy, 1.0f}, // Animation duration
+	TMap<EAttackType, float> AttackSpeeds = {
+		{EAttackType::Basic, 0.f}, 
+		{EAttackType::Heavy, 1.0f}, 
 		{EAttackType::Special, 5.0f}
 	};
 	
+	//Will disapear
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	TMap<EAttackType, float> AttackCooldownMultipliers = {
-		{EAttackType::Basic, 1.0f},
+	TMap<EAttackType, float> AttackSpeedMultipliers = {
+		{EAttackType::Basic, 1.0f}, 
 		{EAttackType::Heavy, 1.0f},
 		{EAttackType::Special, 1.0f}
 	};
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	TMap<EAttackType, float> AttackRadius = {
-		{EAttackType::Basic, 45.f},
+		{EAttackType::Basic, 60.f},
 		{EAttackType::Heavy, 90.f},
 		{EAttackType::Special, 180.f}
 	};
@@ -52,7 +54,7 @@ struct STWINSLEGACY_API FPlayerCharacterStats : public FBaseCharacterStats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	TMap<EAttackType, float> AttackRanges = {
 		{EAttackType::Basic, 200.f},
-		{EAttackType::Heavy, 300.f},
+		{EAttackType::Heavy, 450.f},
 		{EAttackType::Special, 500.f}
 	};
 	

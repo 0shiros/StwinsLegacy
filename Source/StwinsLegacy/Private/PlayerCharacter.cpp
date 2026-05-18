@@ -70,7 +70,7 @@ bool APlayerCharacter::CanAttack(EAttackType AttackType)
 {
 	float CurrentTime = GetWorld()->GetTimeSeconds();
 	
-	if (CurrentTime - LastAttackTimes[AttackType] >= PlayerStats.AttackCooldowns[AttackType] * PlayerStats.AttackCooldownMultipliers[AttackType])
+	if (CurrentTime - LastAttackTimes[AttackType] >= PlayerStats.AttackSpeeds[AttackType] * PlayerStats.AttackSpeedMultipliers[AttackType])
 	{
 		LastAttackTimes[AttackType] = CurrentTime;
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Attack %d Executed"), (int)AttackType));
@@ -80,11 +80,11 @@ bool APlayerCharacter::CanAttack(EAttackType AttackType)
 	return false;
 }
 
-void APlayerCharacter::Attack(EAttackType AttackType)
-{
+void APlayerCharacter::BasicAttack(EAttackType AttackType)
+{		
 	if (!CanAttack(AttackType))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Attack On Cooldown"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Basic Attack On Cooldown"));
 		return;
 	}
 	
@@ -163,30 +163,20 @@ void APlayerCharacter::ComboBasicAttackSave()
 	{
 		bSaveAttack = false;
 		SwitchAnimMontage();
+		return;
+	}
+	
+	if (bIsHoldingAttack)
+	{
+		SwitchAnimMontage();
 	}
 }
 
 void APlayerCharacter::SwitchAnimMontage()
 {
-	switch (AttackComboCount)
-	{
-	case 0:
-		AttackComboCount = 1;
-		PlayAnimMontage(BasicAttackMontages[0]);
-		break;
-	case 1:
-		AttackComboCount = 2;
-		PlayAnimMontage(BasicAttackMontages[1]);
-		break;
-	case 2:
-		AttackComboCount = 3;
-		PlayAnimMontage(BasicAttackMontages[2]);
-		break;
-	case 3: 
-		AttackComboCount = 0;
-		PlayAnimMontage(BasicAttackMontages[3]);
-		break;
-	}
+	UAnimMontage* Montage = BasicAttackMontages[AttackComboCount];
+	AttackComboCount = (AttackComboCount + 1) % 4;
+	PlayAnimMontage(Montage, PlayerStats.AttackSpeeds[EAttackType::Basic]);
 }
 
 void APlayerCharacter::ResetBasicAttackCombo()
@@ -194,6 +184,85 @@ void APlayerCharacter::ResetBasicAttackCombo()
 	bIsAttacking = false;
 	bSaveAttack = false;
 	AttackComboCount = 0;
+}
+
+void APlayerCharacter::HeavyAttackAnimationNotify()
+{
+	if (!CanAttack(EAttackType::Heavy))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Heavy Attack On Cooldown"));
+		return;
+	}
+	
+	if (!IsValid(HeavyAttackMontage))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Heavy Attack Montage Not Valid"));
+		return;
+	}
+	
+	PlayAnimMontage(HeavyAttackMontage);	
+	
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Animation duration: %f"), PlayAnimMontage(HeavyAttackMontage)));
+}
+
+void APlayerCharacter::HeavyAttack(EAttackType AttackType)
+{
+	FVector Origin;
+	FVector BoxExtent;
+	GetMesh()->Bounds.GetBox().GetCenterAndExtents(Origin, BoxExtent);
+	float Height = BoxExtent.Z * 2.0f;
+	float AttackRange = PlayerStats.AttackRanges[AttackType] * PlayerStats.AttackRangeMultipliers[AttackType];
+	float AttackRadius = PlayerStats.AttackRadius[AttackType];
+	
+	float AttackMultiplier = PlayerStats.AttackMultipliers[AttackType];
+	
+	FQuat Rotation = GetActorQuat();
+	
+	TArray<FOverlapResult> OverlapResults;
+	
+	GetWorld()->OverlapMultiByChannel(
+		OverlapResults,
+		GetActorLocation() + GetActorForwardVector() * AttackRange,
+		Rotation,
+		ECC_Pawn,
+		FCollisionShape::MakeBox(FVector(AttackRange, AttackRadius, Height))
+	);
+	
+	if (OverlapResults.Num() == 0)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("No Enemies Hit"));
+		return;
+	}
+	
+	TArray<TObjectPtr<AActor>> HitActors;
+		
+	for (FOverlapResult& Result : OverlapResults)
+	{
+		AActor* Actor = Result.GetActor();
+
+		if (!Actor || Actor == this) continue;
+
+		HitActors.AddUnique(Actor);
+	}
+	
+	for (TObjectPtr HitActor : HitActors)
+	{
+		if (IDamageable* Damageable = Cast<IDamageable>(HitActor))
+		{
+			FVector KnockbackDir = (HitActor->GetActorLocation() - GetActorLocation()).GetSafeNormal();
+			Damageable->TakeDamage(PlayerStats.BaseAttack * AttackMultiplier, PlayerStats.KnockbackForces[AttackType], KnockbackDir);
+		}
+	}
+	
+	DrawDebugBox(GetWorld(),
+		GetActorLocation() + GetActorForwardVector() * AttackRange,
+		FVector(AttackRange, AttackRadius, Height), 
+		 Rotation,
+		FColor::Blue, 
+		false, 
+		0.5f,
+		0, 
+		2.f);
 }
 
 void APlayerCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection)
