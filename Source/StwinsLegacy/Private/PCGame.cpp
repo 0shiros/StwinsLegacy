@@ -96,7 +96,7 @@ void APCGame::Move(const FInputActionValue& Value)
 	
 	if (!PlayerCharacter->bCanMove)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Cannot Move"));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Cannot Move"));
 		return;
 	}
 	
@@ -125,7 +125,7 @@ void APCGame::Dash(const FInputActionValue& Value)
 	
 	if (!PlayerCharacter->CanDash() || !PlayerCharacter->bCanMove)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Dash On Cooldown"));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Dash On Cooldown"));
 		return;
 	}
 	
@@ -165,7 +165,7 @@ void APCGame::BasicAttack(const FInputActionValue& Value)
 	
 	if (!PlayerCharacter->CanAttack(EAttackType::Basic))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Basic Attack On Cooldown"));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Basic Attack On Cooldown"));
 		return;
 	}
 	
@@ -194,7 +194,7 @@ void APCGame::HeavyAttack(const FInputActionValue& Value)
 	
 	if (!PlayerCharacter->CanAttack(EAttackType::Heavy))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Heavy Attack On Cooldown"));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Heavy Attack On Cooldown"));
 		return;
 	}
 	
@@ -212,7 +212,7 @@ void APCGame::SpecialAttack(const FInputActionValue& Value)
 	
 	if (!PlayerCharacter->CanAttack(EAttackType::Special))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Special Attack On Cooldown"));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Special Attack On Cooldown"));
 		return;
 	}
 	

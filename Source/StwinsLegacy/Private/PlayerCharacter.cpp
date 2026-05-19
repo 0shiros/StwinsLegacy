@@ -135,8 +135,9 @@ void APlayerCharacter::BasicAttack(EAttackType AttackType)
 	FVector RightEdge = GetActorLocation() + Forward.RotateAngleAxis( AttackRadius, FVector::UpVector) * AttackRange;
 	FVector LeftEdge  = GetActorLocation()  + Forward.RotateAngleAxis(-AttackRadius, FVector::UpVector) * AttackRange;
 
-	DrawDebugLine(GetWorld(), GetActorLocation() , RightEdge, FColor::Red, false, 0.f, 0, 2.f);
-	DrawDebugLine(GetWorld(), GetActorLocation() , LeftEdge,  FColor::Red, false, 0.f, 0, 2.f);
+	//DrawDebugLine(GetWorld(), GetActorLocation() , RightEdge, FColor::Red, false, 0.f, 0, 2.f);
+	//DrawDebugLine(GetWorld(), GetActorLocation() , LeftEdge,  FColor::Red, false, 0.f, 0, 2.f);
+	//DrawDebugSphere(GetWorld(), GetActorLocation(), AttackRange, 12, FColor::Green, false, 0.5f, 0, 2.f);
 }
 
 void APlayerCharacter::BasicAttackAnimationNotify()
@@ -241,15 +242,15 @@ void APlayerCharacter::HeavyAttack(EAttackType AttackType)
 		}
 	}
 	
-	DrawDebugBox(GetWorld(),
-		GetActorLocation() + GetActorForwardVector() * AttackRange,
-		FVector(AttackRange, AttackRadius, Height), 
-		 Rotation,
-		FColor::Blue, 
-		false, 
-		0.5f,
-		0, 
-		2.f);
+	// DrawDebugBox(GetWorld(),
+	// 	GetActorLocation() + GetActorForwardVector() * AttackRange,
+	// 	FVector(AttackRange, AttackRadius, Height), 
+	// 	 Rotation,
+	// 	FColor::Blue, 
+	// 	false, 
+	// 	0.5f,
+	// 	0, 
+	// 	2.f);
 }
 
 void APlayerCharacter::SpecialAttackAnimationNotify()
@@ -304,7 +305,7 @@ void APlayerCharacter::SpecialAttack(EAttackType AttackType)
 		}
 	}	
 	
-	DrawDebugSphere(GetWorld(), GetActorLocation(), AttackRange, 12, FColor::Green, false, 0.5f, 0, 2.f);
+	//DrawDebugSphere(GetWorld(), GetActorLocation(), AttackRange, 12, FColor::Green, false, 0.5f, 0, 2.f);
 }
 
 void APlayerCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection)
