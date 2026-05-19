@@ -198,7 +198,6 @@ void APCGame::HeavyAttack(const FInputActionValue& Value)
 		return;
 	}
 	
-	PlayerCharacter->SetCanMove(false);
 	OrientCharacterToAttack();
 	PlayerCharacter->HeavyAttackAnimationNotify();
 }
@@ -217,7 +216,6 @@ void APCGame::SpecialAttack(const FInputActionValue& Value)
 		return;
 	}
 	
-	PlayerCharacter->SetCanMove(false);
 	OrientCharacterToAttack();
 	PlayerCharacter->SpecialAttackAnimationNotify();
 }
