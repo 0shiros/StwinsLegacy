@@ -94,6 +94,12 @@ void APCGame::Move(const FInputActionValue& Value)
 		return;
 	}	
 	
+	if (!PlayerCharacter->bCanMove)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Cannot Move"));
+		return;
+	}
+	
 	FVector2D Input = Value.Get<FVector2D>();
 	if (Input.IsNearlyZero()) return;
 
@@ -117,7 +123,7 @@ void APCGame::Dash(const FInputActionValue& Value)
 		return;
 	}
 	
-	if (!PlayerCharacter->CanDash())
+	if (!PlayerCharacter->CanDash() || !PlayerCharacter->bCanMove)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Dash On Cooldown"));
 		return;
@@ -192,6 +198,7 @@ void APCGame::HeavyAttack(const FInputActionValue& Value)
 		return;
 	}
 	
+	PlayerCharacter->SetCanMove(false);
 	OrientCharacterToAttack();
 	PlayerCharacter->HeavyAttackAnimationNotify();
 }
@@ -210,6 +217,7 @@ void APCGame::SpecialAttack(const FInputActionValue& Value)
 		return;
 	}
 	
+	PlayerCharacter->SetCanMove(false);
 	OrientCharacterToAttack();
 	PlayerCharacter->SpecialAttackAnimationNotify();
 }

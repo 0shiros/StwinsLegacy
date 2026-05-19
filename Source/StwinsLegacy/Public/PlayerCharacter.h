@@ -23,6 +23,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")	
 	TObjectPtr<class USpringArmComponent> SpringArm;
 			
+	//State
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "State")
+	bool bCanMove = true;
+	
 	//Stats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	FPlayerCharacterStats PlayerStats;
@@ -98,4 +102,7 @@ public:
 	void SpecialAttack(EAttackType AttackType);
 	
 	void virtual TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection) override;
+	
+	UFUNCTION(BlueprintCallable, Category = "State")
+	void SetCanMove(bool bNewCanMove) { bCanMove = bNewCanMove; }
 };

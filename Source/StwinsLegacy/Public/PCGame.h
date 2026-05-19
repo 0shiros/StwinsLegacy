@@ -73,5 +73,5 @@ public :
 	
 	void Interact(const FInputActionValue& Value);
 	
-	void PauseMenu(const FInputActionValue& Value);	
+	void PauseMenu(const FInputActionValue& Value);		
 };
