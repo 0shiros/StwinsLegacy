@@ -189,9 +189,7 @@ void APlayerCharacter::HeavyAttackAnimationNotify()
 		return;
 	}
 	
-	PlayAnimMontage(HeavyAttackMontage, PlayerStats.AttackSpeedMultipliers[EAttackType::Heavy]);	
-	
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Animation duration: %f"), PlayAnimMontage(HeavyAttackMontage)));
+	PlayAnimMontage(HeavyAttackMontage, PlayerStats.AttackSpeedMultipliers[EAttackType::Heavy]);		
 }
 
 void APlayerCharacter::HeavyAttack(EAttackType AttackType)
@@ -252,6 +250,61 @@ void APlayerCharacter::HeavyAttack(EAttackType AttackType)
 		0.5f,
 		0, 
 		2.f);
+}
+
+void APlayerCharacter::SpecialAttackAnimationNotify()
+{
+	if (!IsValid(SpecialAttackMontage))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Special Attack Montage Not Valid"));
+		return;
+	}
+	
+	PlayAnimMontage(SpecialAttackMontage, PlayerStats.AttackSpeedMultipliers[EAttackType::Special]);
+}
+
+void APlayerCharacter::SpecialAttack(EAttackType AttackType)
+{
+	float AttackRange = PlayerStats.AttackRanges[AttackType] * PlayerStats.AttackRangeMultipliers[AttackType];
+	float AttackMultiplier = PlayerStats.AttackMultipliers[AttackType];
+	
+	TArray<FOverlapResult> OverlapResults;
+	
+	GetWorld()->OverlapMultiByChannel(
+		OverlapResults,
+		GetActorLocation(),
+		FQuat::Identity,
+		ECC_Pawn,
+		FCollisionShape::MakeSphere(AttackRange)
+	);
+	
+	if (OverlapResults.Num() == 0)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("No Enemies Hit"));
+		return;
+	}
+	
+	TArray<TObjectPtr<AActor>> HitActors;
+	
+	for (FOverlapResult& Result : OverlapResults)
+	{
+		AActor* Actor = Result.GetActor();
+
+		if (!Actor || Actor == this) continue;
+
+		HitActors.AddUnique(Actor);
+	}
+	
+	for (TObjectPtr HitActor : HitActors)
+	{
+		if (IDamageable* Damageable = Cast<IDamageable>(HitActor))
+		{
+			FVector KnockbackDir = (HitActor->GetActorLocation() - GetActorLocation()).GetSafeNormal();
+			Damageable->TakeDamage(PlayerStats.BaseAttack * AttackMultiplier, PlayerStats.KnockbackForces[AttackType], KnockbackDir);
+		}
+	}
+	
+	DrawDebugSphere(GetWorld(), GetActorLocation(), AttackRange, 12, FColor::Green, false, 0.5f, 0, 2.f);
 }
 
 void APlayerCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection)

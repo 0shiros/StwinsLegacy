@@ -211,7 +211,7 @@ void APCGame::SpecialAttack(const FInputActionValue& Value)
 	}
 	
 	OrientCharacterToAttack();
-	PlayerCharacter->BasicAttack(EAttackType::Special);
+	PlayerCharacter->SpecialAttackAnimationNotify();
 }
 
 void APCGame::Interact(const FInputActionValue& Value)

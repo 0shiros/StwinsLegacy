@@ -49,6 +49,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimationHeavyAttack")
 	TObjectPtr<UAnimMontage> HeavyAttackMontage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimationSpecialAttack")
+	TObjectPtr<UAnimMontage> SpecialAttackMontage;
 		
 private :
 	
@@ -68,10 +71,10 @@ public:
 	
 	bool CanAttack(EAttackType AttackType);	
 	
+	//Basic Attack
 	UFUNCTION(BlueprintCallable, Category = "BasicAttack")
 	void BasicAttack(EAttackType AttackType);
 	
-	UFUNCTION(BlueprintCallable, Category = "Animation")
 	void BasicAttackAnimationNotify();
 	
 	UFUNCTION(BlueprintCallable, Category = "Basic Attack")
@@ -82,11 +85,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Basic Attack")
 	void ResetBasicAttackCombo();
 	
-	UFUNCTION(BlueprintCallable, Category = "Animation")
+	//Heavy Attack
 	void HeavyAttackAnimationNotify();
 	
 	UFUNCTION(BlueprintCallable, Category = "HeavyAttack")
 	void HeavyAttack(EAttackType AttackType);
+	
+	//Special Attack
+	void SpecialAttackAnimationNotify();
+	
+	UFUNCTION(BlueprintCallable, Category = "SpecialAttack")
+	void SpecialAttack(EAttackType AttackType);
 	
 	void virtual TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection) override;
 };
