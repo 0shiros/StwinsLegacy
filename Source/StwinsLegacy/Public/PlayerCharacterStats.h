@@ -30,13 +30,13 @@ struct STWINSLEGACY_API FPlayerCharacterStats : public FBaseCharacterStats
 	
 	//Animation speed multipliers
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	TMap<EAttackType, float> AttackSpeeds = {
+	TMap<EAttackType, float> AttackCooldowns = {
 		{EAttackType::Basic, 0.f}, 
 		{EAttackType::Heavy, 1.0f}, 
 		{EAttackType::Special, 5.0f}
 	};
 	
-	//Will disapear
+	//Will disapear with animation montages
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	TMap<EAttackType, float> AttackSpeedMultipliers = {
 		{EAttackType::Basic, 1.0f}, 

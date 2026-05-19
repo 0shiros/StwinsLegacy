@@ -157,6 +157,12 @@ void APCGame::BasicAttack(const FInputActionValue& Value)
 		return;
 	}	
 	
+	if (!PlayerCharacter->CanAttack(EAttackType::Basic))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Basic Attack On Cooldown"));
+		return;
+	}
+	
 	PlayerCharacter->bIsHoldingAttack = true;
 	PlayerCharacter->BasicAttackAnimationNotify();
 }
@@ -167,7 +173,7 @@ void APCGame::BasicAttackRelease(const FInputActionValue& Value)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Character Not Valid"));
 		return;
-	}	
+	}
 	
 	PlayerCharacter->bIsHoldingAttack = false;
 }
@@ -180,6 +186,12 @@ void APCGame::HeavyAttack(const FInputActionValue& Value)
 		return;
 	}
 	
+	if (!PlayerCharacter->CanAttack(EAttackType::Heavy))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Heavy Attack On Cooldown"));
+		return;
+	}
+	
 	OrientCharacterToAttack();
 	PlayerCharacter->HeavyAttackAnimationNotify();
 }
@@ -189,6 +201,12 @@ void APCGame::SpecialAttack(const FInputActionValue& Value)
 	if (!PlayerCharacter)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Character Not Valid"));
+		return;
+	}
+	
+	if (!PlayerCharacter->CanAttack(EAttackType::Special))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Special Attack On Cooldown"));
 		return;
 	}
 	

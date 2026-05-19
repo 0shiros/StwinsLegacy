@@ -70,10 +70,10 @@ bool APlayerCharacter::CanAttack(EAttackType AttackType)
 {
 	float CurrentTime = GetWorld()->GetTimeSeconds();
 	
-	if (CurrentTime - LastAttackTimes[AttackType] >= PlayerStats.AttackSpeeds[AttackType] * PlayerStats.AttackSpeedMultipliers[AttackType])
+	if (CurrentTime - LastAttackTimes[AttackType] >= PlayerStats.AttackCooldowns[AttackType])
 	{
 		LastAttackTimes[AttackType] = CurrentTime;
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Attack %d Executed"), (int)AttackType));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Can Attack: %s"), *UEnum::GetValueAsString(AttackType)));
 		return true;
 	}
 	
@@ -82,11 +82,6 @@ bool APlayerCharacter::CanAttack(EAttackType AttackType)
 
 void APlayerCharacter::BasicAttack(EAttackType AttackType)
 {		
-	if (!CanAttack(AttackType))
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Basic Attack On Cooldown"));
-		return;
-	}
 	
 	float AttackRange = PlayerStats.AttackRanges[AttackType] * PlayerStats.AttackRangeMultipliers[AttackType];
 	float AttackRadius = PlayerStats.AttackRadius[AttackType];
@@ -145,7 +140,7 @@ void APlayerCharacter::BasicAttack(EAttackType AttackType)
 }
 
 void APlayerCharacter::BasicAttackAnimationNotify()
-{
+{	
 	if (bIsAttacking)
 	{
 		bSaveAttack = true;
@@ -173,10 +168,10 @@ void APlayerCharacter::ComboBasicAttackSave()
 }
 
 void APlayerCharacter::SwitchAnimMontage()
-{
+{	
 	UAnimMontage* Montage = BasicAttackMontages[AttackComboCount];
 	AttackComboCount = (AttackComboCount + 1) % 4;
-	PlayAnimMontage(Montage, PlayerStats.AttackSpeeds[EAttackType::Basic]);
+	PlayAnimMontage(Montage, PlayerStats.AttackSpeedMultipliers[EAttackType::Basic]);	
 }
 
 void APlayerCharacter::ResetBasicAttackCombo()
@@ -187,20 +182,14 @@ void APlayerCharacter::ResetBasicAttackCombo()
 }
 
 void APlayerCharacter::HeavyAttackAnimationNotify()
-{
-	if (!CanAttack(EAttackType::Heavy))
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Heavy Attack On Cooldown"));
-		return;
-	}
-	
+{	
 	if (!IsValid(HeavyAttackMontage))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Heavy Attack Montage Not Valid"));
 		return;
 	}
 	
-	PlayAnimMontage(HeavyAttackMontage);	
+	PlayAnimMontage(HeavyAttackMontage, PlayerStats.AttackSpeedMultipliers[EAttackType::Heavy]);	
 	
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Animation duration: %f"), PlayAnimMontage(HeavyAttackMontage)));
 }
