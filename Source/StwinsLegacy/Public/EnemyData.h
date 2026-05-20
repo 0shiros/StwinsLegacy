@@ -8,14 +8,20 @@
 #include "Engine/DataAsset.h"
 #include "EnemyData.generated.h"
 
-UCLASS()
-class STWINSLEGACY_API UEnemyData : public UDataAsset
+UCLASS(BlueprintType)
+class STWINSLEGACY_API UEnemyData : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	FName EnemyName;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ParticleAnimation")
+	TObjectPtr<UParticleSystem> SpawnParticleEffect;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ParticleAnimation")
+	float SpawnParticleEffectDuration = 1.5f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	int Score = 0;

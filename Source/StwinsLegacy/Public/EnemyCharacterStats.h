@@ -6,10 +6,21 @@
 #include "BaseCharacterStats.h"
 #include "EnemyCharacterStats.generated.h"
 
+UENUM(BlueprintType)
+enum class EEnemyType : uint8
+{
+	Melee UMETA(DisplayName = "Melee"),
+	Ranged UMETA(DisplayName = "Ranged"),
+	Boss UMETA(DisplayName = "Boss")	
+};
+
 USTRUCT(BlueprintType)
 struct STWINSLEGACY_API FEnemyCharacterStats : public FBaseCharacterStats
 {
 	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	EEnemyType EnemyType = EEnemyType::Melee;
 	
 	//Melee
 	
