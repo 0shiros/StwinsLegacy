@@ -11,4 +11,43 @@ ABaseCharacter::ABaseCharacter()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
+void ABaseCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection,
+                                float StunDuration)
+{
+	if (CurrentHealth <= 0)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Player Character Already Dead"));
+		return;
+	}
+	
+	LaunchCharacter(KnockbackDirection * KnockbackForce, true, true);
+	CurrentHealth = FMath::Max(0.f, CurrentHealth - DamageAmount);
+	
+	if (CurrentHealth <= 0)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Character Died"));
+	}
+		
+	if (StunDuration > 0.f)
+	{
+		bCanMove = false;
+		bCanAttack = false;
+		
+		FTimerHandle UnusedHandle;
+		
+		GetWorldTimerManager().SetTimer(
+			UnusedHandle,
+			this,
+			&ABaseCharacter::EnableActions,
+			StunDuration,
+			false
+		);
+	}
+}
+
+void ABaseCharacter::EnableActions()
+{
+	bCanMove = true;
+	bCanAttack = true;
+}
 

@@ -23,54 +23,50 @@ AEnemyCharacter::AEnemyCharacter()
 	GetCharacterMovement()->GetNavMovementProperties()->FixedPathBrakingDistance = 120.f;
 	
 	// Create and configure the spawn particle effect component
-	SpawnParticleEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SpawnParticleEffect"));
-	SpawnParticleEffect->SetupAttachment(GetMesh());
-	SpawnParticleEffect->bAutoActivate = false;
-	SpawnParticleEffect->bAutoDestroy = false;
+	ParticleEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SpawnParticleEffect"));
+	ParticleEffect->SetupAttachment(GetMesh());
+	ParticleEffect->bAutoActivate = false;
+	ParticleEffect->bAutoDestroy = false;
 }
 
 void AEnemyCharacter::InitialiseCharacterStats(UEnemyData* EnemyData)
 {
-	GetMesh()->SetVisibility(false);
 	EnemyStats = EnemyData->EnemyStats;
 	GetCharacterMovement()->MaxWalkSpeed = EnemyStats.BaseSpeed;	
 	CurrentHealth = EnemyStats.MaxHealth;
 	
-	SpawnParticleEffect->SetTemplate(EnemyData->SpawnParticleEffect);	
-	SpawnParticleEffect->Activate(true);
-	
-	FTimerHandle UnusedHandle;
-	
-	GetWorldTimerManager().SetTimer(
-			UnusedHandle,
-			this,
-			&AEnemyCharacter::OnSpawnFinished,
-			EnemyData->SpawnParticleEffectDuration,
-			false
-		);		
+	SpawnAnimation(EnemyData);
 }
 
-void AEnemyCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection)
+void AEnemyCharacter::SpawnAnimation(UEnemyData* EnemyData)
 {	
-	if (CurrentHealth <= 0)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Enemy %s Already Defeated"), *GetName()));
-		return;
-	}
-	
-    CurrentHealth = FMath::Max(0.f, CurrentHealth - DamageAmount);
-	LaunchCharacter(KnockbackDirection * KnockbackForce, true, true);
-	
-	if (CurrentHealth <= 0)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Enemy %s Defeated"), *GetName()));
-		//Destroy();
-	}
+	GetMesh()->SetVisibility(false);
+	ParticleEffect->SetTemplate(EnemyData->SpawnParticleEffect);	
+	ParticleEffect->Activate(true);
+
+	FTimerHandle UnusedHandle;
+
+	GetWorldTimerManager().SetTimer(
+	UnusedHandle,
+	this,
+	&AEnemyCharacter::OnSpawnFinished,
+	EnemyData->SpawnParticleEffectDuration,
+	false
+	);	
+}
+
+void AEnemyCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection, float StunDuration)
+{	
+	Super::TakeDamage(DamageAmount, KnockbackForce, KnockbackDirection, StunDuration);
 }
 
 void AEnemyCharacter::OnSpawnFinished()
 {
 	GetMesh()->SetVisibility(true);
-	SpawnParticleEffect->Deactivate();
+	ParticleEffect->Deactivate();
 }
 
+void AEnemyCharacter::EnableActions()
+{
+	Super::EnableActions();
+}

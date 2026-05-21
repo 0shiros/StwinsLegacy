@@ -22,11 +22,7 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")	
 	TObjectPtr<class USpringArmComponent> SpringArm;
-			
-	//State
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "State")
-	bool bCanMove = true;
-	
+				
 	//Stats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	FPlayerCharacterStats PlayerStats;
@@ -35,6 +31,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
 	TObjectPtr<class UMyGameInstance> GameInstance;
 			
+	//States
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Attack")
 	bool bIsAttacking = false;
 	
@@ -46,7 +43,7 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Attack")
 	uint8 AttackComboCount = 0;
-	
+		
 	//Animations
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimationBasicAttack")
 	TArray<TObjectPtr<UAnimMontage>> BasicAttackMontages;
@@ -101,7 +98,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SpecialAttack")
 	void SpecialAttack(EAttackType AttackType);
 	
-	void virtual TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection) override;
+	void virtual TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection, float StunDuration) override;
 	
 	UFUNCTION(BlueprintCallable, Category = "State")
 	void SetCanMove(bool bNewCanMove) { bCanMove = bNewCanMove; }

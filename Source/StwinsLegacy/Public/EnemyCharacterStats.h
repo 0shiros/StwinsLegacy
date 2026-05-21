@@ -22,27 +22,41 @@ struct STWINSLEGACY_API FEnemyCharacterStats : public FBaseCharacterStats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	EEnemyType EnemyType = EEnemyType::Melee;
 	
-	//Melee
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	float StunDuration = 0.f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	TMap<EEnemyType, float> DistanceToAttack = {
+		{EEnemyType::Melee, 125.f},
+		{EEnemyType::Ranged, 575.f},
+		{EEnemyType::Boss, 175.f}
+	};	
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	TMap<EEnemyType, float> AttackRanges = {
+		{EEnemyType::Melee, 150.f},
+		{EEnemyType::Ranged, 600.f},
+		{EEnemyType::Boss, 200.f}
+	};	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")	
-	float MeleeAttackMultiplier = 1.f;
+	float AttackMultiplier = 1.f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float MeleeAttackCooldown = 1.f;
+	float AttackCooldown = 1.f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float MeleeAttackCooldownMultiplier = 1.f;
+	float AttackCooldownMultiplier = 1.f;
+		
+	//Melee
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float MeleeAttackRange = 150.f;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float MeleeAttackAngle = 60.f;
+	float MeleeAttackRadius = 60.f;
 	
 	//Ranged
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	TSubclassOf<class AProjectile> ProjectileClass;	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float ProjectileSpeed = 1000.f;	
+	float ProjectileSpeed = 1000.f;		
 };

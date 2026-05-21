@@ -70,4 +70,11 @@ struct STWINSLEGACY_API FPlayerCharacterStats : public FBaseCharacterStats
 		{EAttackType::Heavy, 2000.f},
 		{EAttackType::Special, 4000.f}
 	};
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	TMap<EAttackType, float> StunDurations = {
+		{EAttackType::Basic, 0.5f},
+		{EAttackType::Heavy, 1.0f},
+		{EAttackType::Special, 2.0f}
+	};
 };

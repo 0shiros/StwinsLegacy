@@ -5,33 +5,37 @@
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
 #include "EnemyCharacterStats.h"
-#include "InterfaceAI.h"
 #include "EnemyCharacter.generated.h"
 
 UCLASS(Abstract)
-class STWINSLEGACY_API AEnemyCharacter : public ABaseCharacter, public IInterfaceAI
+class STWINSLEGACY_API AEnemyCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
 
 public:
-	AEnemyCharacter();
+	AEnemyCharacter();	
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ParticleAnimation")
-	TObjectPtr<UParticleSystemComponent> SpawnParticleEffect;
+	TObjectPtr<UParticleSystemComponent> ParticleEffect;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	FEnemyCharacterStats EnemyStats;
+	FEnemyCharacterStats EnemyStats;	
 	
-protected:	
+public:
 	UFUNCTION(BlueprintCallable, Category = "Initialization")
 	void InitialiseCharacterStats(class UEnemyData* EnemyData);
-
-public:
-	virtual void TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection) override;
 	
-	virtual EEnemyType GetEnemyType() const override {return EnemyStats.EnemyType;}
+	virtual void SpawnAnimation(UEnemyData* EnemyData);	
+	
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	virtual void Attack() PURE_VIRTUAL(AEnemyCharacter::Attack, );
+	
+	virtual void TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection, float StunDuration) override;
+	
+	EEnemyType GetEnemyType() const {return EnemyStats.EnemyType;}
 	
 	UFUNCTION()
-	void OnSpawnFinished();
+	void OnSpawnFinished();	
 	
+	virtual void EnableActions() override;
 };

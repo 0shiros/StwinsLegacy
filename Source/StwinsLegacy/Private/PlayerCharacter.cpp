@@ -68,6 +68,11 @@ bool APlayerCharacter::CanDash()
 
 bool APlayerCharacter::CanAttack(EAttackType AttackType)
 {
+	if (!bCanAttack)
+	{
+		return false;
+	}
+	
 	float CurrentTime = GetWorld()->GetTimeSeconds();
 	
 	if (CurrentTime - LastAttackTimes[AttackType] >= PlayerStats.AttackCooldowns[AttackType])
@@ -128,7 +133,7 @@ void APlayerCharacter::BasicAttack(EAttackType AttackType)
 		if (IDamageable* Damageable = Cast<IDamageable>(HitActor))
 		{
 			FVector KnockbackDir = (HitActor->GetActorLocation() - GetActorLocation()).GetSafeNormal();
-			Damageable->TakeDamage(PlayerStats.BaseAttack * AttackMultiplier, PlayerStats.KnockbackForces[AttackType], KnockbackDir);
+			Damageable->TakeDamage(PlayerStats.BaseAttack * AttackMultiplier, PlayerStats.KnockbackForces[AttackType], KnockbackDir, PlayerStats.StunDurations[AttackType]);
 		}
 	}
 	
@@ -238,7 +243,7 @@ void APlayerCharacter::HeavyAttack(EAttackType AttackType)
 		if (IDamageable* Damageable = Cast<IDamageable>(HitActor))
 		{
 			FVector KnockbackDir = (HitActor->GetActorLocation() - GetActorLocation()).GetSafeNormal();
-			Damageable->TakeDamage(PlayerStats.BaseAttack * AttackMultiplier, PlayerStats.KnockbackForces[AttackType], KnockbackDir);
+			Damageable->TakeDamage(PlayerStats.BaseAttack * AttackMultiplier, PlayerStats.KnockbackForces[AttackType], KnockbackDir, PlayerStats.StunDurations[AttackType]);
 		}
 	}
 	
@@ -301,27 +306,16 @@ void APlayerCharacter::SpecialAttack(EAttackType AttackType)
 		if (IDamageable* Damageable = Cast<IDamageable>(HitActor))
 		{
 			FVector KnockbackDir = (HitActor->GetActorLocation() - GetActorLocation()).GetSafeNormal();
-			Damageable->TakeDamage(PlayerStats.BaseAttack * AttackMultiplier, PlayerStats.KnockbackForces[AttackType], KnockbackDir);
+			Damageable->TakeDamage(PlayerStats.BaseAttack * AttackMultiplier, PlayerStats.KnockbackForces[AttackType], KnockbackDir, PlayerStats.StunDurations[AttackType]);
 		}
 	}	
 	
 	//DrawDebugSphere(GetWorld(), GetActorLocation(), AttackRange, 12, FColor::Green, false, 0.5f, 0, 2.f);
 }
 
-void APlayerCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection)
+void APlayerCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection, float StunDuration)
 {	
-	if (CurrentHealth <= 0)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Player Character Already Dead"));
-		return;
-	}
-	
-	CurrentHealth = FMath::Max(0.f, CurrentHealth - DamageAmount);
-	
-	if (CurrentHealth <= 0)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Character Died"));
-	}
+	Super::TakeDamage(DamageAmount, KnockbackForce, KnockbackDirection, StunDuration);
 }
 
 
