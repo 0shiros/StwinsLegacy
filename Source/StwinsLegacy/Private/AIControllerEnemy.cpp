@@ -16,7 +16,6 @@ void AAIControllerEnemy::OnPossess(APawn* InPawn)
 	ControlledEnemy = Cast<AEnemyCharacter>(InPawn);	
 	ControlledEnemy->OnCanMove.BindUObject(this, &AAIControllerEnemy::OnEnemyCanMove);
 	ControlledEnemy->OnCanAttack.BindUObject(this, &AAIControllerEnemy::OnEnemyCanAttack);
-	ControlledEnemy->InitialiseCharacterStats();
 	
 	EEnemyType EnemyType = ControlledEnemy->GetEnemyType();
 	
@@ -25,6 +24,7 @@ void AAIControllerEnemy::OnPossess(APawn* InPawn)
 	PlayerCharacter = Cast<APlayerCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());		
 	ControlledEnemy->PlayerReference = PlayerCharacter;
 	
+	ControlledEnemy->InitialiseCharacterStats();
 	BlackboardComponent->SetValueAsObject(TEXT("AttackTarget"), PlayerCharacter);
 	BlackboardComponent->SetValueAsFloat(TEXT("RangeToAttack"), ControlledEnemy->EnemyData->EnemyStats.DistanceToAttack[EnemyType]);
 	BlackboardComponent->SetValueAsEnum(TEXT("EnemyType"), static_cast<uint8>(EnemyType));

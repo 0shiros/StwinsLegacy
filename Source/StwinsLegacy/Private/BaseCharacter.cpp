@@ -54,6 +54,7 @@ void ABaseCharacter::DeathAnimationNotify()
 	}
 	
 	PlayAnimMontage(DeathMontage);
+	DisableActions();
 }
 
 void ABaseCharacter::DisableActions()

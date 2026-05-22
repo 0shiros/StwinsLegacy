@@ -17,5 +17,5 @@ struct STWINSLEGACY_API FBaseCharacterStats
 	float BaseSpeed = 800.f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	int BaseAttack = 10;
+	int BaseAttack = 30;
 };

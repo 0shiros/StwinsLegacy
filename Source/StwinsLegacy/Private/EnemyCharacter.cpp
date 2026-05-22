@@ -107,11 +107,25 @@ void AEnemyCharacter::OnSpawnFinished()
 {
 	ParticleEffect->Deactivate();
 	EnableActions();
-	OnCanMove.ExecuteIfBound(true);
-	OnCanAttack.ExecuteIfBound(true);
 }
 
 void AEnemyCharacter::Death()
 {
 	Destroy();
+}
+
+void AEnemyCharacter::DisableActions()
+{
+	Super::DisableActions();
+	
+	OnCanMove.ExecuteIfBound(false);
+	OnCanAttack.ExecuteIfBound(false);
+}
+
+void AEnemyCharacter::EnableActions()
+{
+	Super::EnableActions();
+	
+	OnCanMove.ExecuteIfBound(true);
+	OnCanAttack.ExecuteIfBound(true);
 }

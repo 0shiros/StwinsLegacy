@@ -59,4 +59,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Death")
 	virtual void Death() override;
+	
+	virtual void DisableActions() override;
+	
+	virtual void EnableActions() override;
 };
