@@ -55,16 +55,16 @@ void AEnemyCharacter::SpawnAnimation()
 	);	
 }
 
-void AEnemyCharacter::Attack(APlayerCharacter* Player)
+void AEnemyCharacter::Attack()
 {
-	OrientEnemyToTarget(Player);
+	OrientEnemyToTarget();
 }
 
-void AEnemyCharacter::OrientEnemyToTarget(const APlayerCharacter* Player)
+void AEnemyCharacter::OrientEnemyToTarget()
 {
-	if (!Player) return;
+	if (!PlayerReference) return;
 
-	FVector DirectionToTarget = Player->GetActorLocation() - GetActorLocation();
+	FVector DirectionToTarget = PlayerReference->GetActorLocation() - GetActorLocation();
 	DirectionToTarget.Z = 0.f;
 
 	if (!DirectionToTarget.IsNearlyZero())

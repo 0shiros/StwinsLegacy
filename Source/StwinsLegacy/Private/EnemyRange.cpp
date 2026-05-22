@@ -23,9 +23,9 @@ void AEnemyRange::SpawnAnimation()
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Ranged Enemy Spawn Animation"));
 }
 
-void AEnemyRange::Attack(APlayerCharacter* Target)
+void AEnemyRange::Attack()
 {	
-	Super::Attack(Target);
+	Super::Attack();
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Ranged Enemy Attacking"));
 	
 	UWorld* World = GetWorld();
@@ -37,7 +37,7 @@ void AEnemyRange::Attack(APlayerCharacter* Target)
 	
 	FVector SpawnLocation = GetActorLocation() + GetActorForwardVector() * EnemyData->EnemyStats.ProjectileSpawnOffSet;
 	
-	FRotator SpawnRotation = (Target->GetActorLocation() - GetActorLocation()).Rotation();
+	FRotator SpawnRotation = (PlayerReference->GetActorLocation() - GetActorLocation()).Rotation();
 	
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;

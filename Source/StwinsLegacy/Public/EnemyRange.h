@@ -21,5 +21,5 @@ protected:
 
 public :
 	
-	virtual void Attack(APlayerCharacter* Target) override;
+	virtual void Attack() override;
 };

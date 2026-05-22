@@ -16,9 +16,9 @@ void AEnemyBoss::SpawnAnimation()
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Boss Spawn Animation"));
 }
 
-void AEnemyBoss::Attack(APlayerCharacter* Target)
+void AEnemyBoss::Attack()
 {
-	Super::Attack(Target);
+	Super::Attack();
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Boss Attacking"));
 }
 

@@ -20,6 +20,9 @@ class STWINSLEGACY_API AEnemyCharacter : public ABaseCharacter
 public:
 	AEnemyCharacter();		
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player")
+	APlayerCharacter* PlayerReference;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ParticleAnimation")
 	TObjectPtr<UParticleSystemComponent> ParticleEffect;
 	
@@ -43,9 +46,9 @@ public:
 	virtual void AttackAnimationNotify() PURE_VIRTUAL(AEnemyCharacter::AttackAnimationNotify, );
 	
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	virtual void Attack(APlayerCharacter* Player);
+	virtual void Attack();
 	
-	void OrientEnemyToTarget(const APlayerCharacter* Player);
+	void OrientEnemyToTarget();
 	
 	virtual FVector Fleeing(APlayerCharacter* PlayerCharacter);
 		

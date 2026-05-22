@@ -36,7 +36,7 @@ public:
 	
 	virtual void AttackAnimationNotify() override;
 	
-	virtual void Attack(APlayerCharacter* Target) override;
+	virtual void Attack() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	void ComboBasicAttackSave();

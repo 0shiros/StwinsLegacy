@@ -23,6 +23,7 @@ void AAIControllerEnemy::OnPossess(APawn* InPawn)
 	RunBehaviorTree(BehaviorTree);
 	BlackboardComponent = GetBlackboardComponent();
 	PlayerCharacter = Cast<APlayerCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());		
+	ControlledEnemy->PlayerReference = PlayerCharacter;
 	
 	BlackboardComponent->SetValueAsObject(TEXT("AttackTarget"), PlayerCharacter);
 	BlackboardComponent->SetValueAsFloat(TEXT("RangeToAttack"), ControlledEnemy->EnemyData->EnemyStats.DistanceToAttack[EnemyType]);

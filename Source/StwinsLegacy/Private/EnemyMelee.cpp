@@ -31,9 +31,9 @@ void AEnemyMelee::AttackAnimationNotify()
 	}
 }
 
-void AEnemyMelee::Attack(APlayerCharacter* Target)
+void AEnemyMelee::Attack()
 {
-	Super::Attack(Target);
+	Super::Attack();
 	
 	float AttackRange = EnemyStats.AttackRanges[EnemyStats.EnemyType];
 	float AttackRadius = EnemyStats.MeleeAttackRadius;
