@@ -17,6 +17,10 @@ class STWINSLEGACY_API ABaseCharacter : public ACharacter, public IDamageable
 public:
 	ABaseCharacter();		
 	
+	//Animations
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimationDeath")
+	TObjectPtr<UAnimMontage> DeathMontage;
+	
 	// States
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
 	bool bCanMove = true;
@@ -31,6 +35,8 @@ public:
 	// Combat
 	virtual void TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection, float StunDuration) override;
 	
+	virtual void DeathAnimationNotify() override;
+		
 	virtual void DisableActions();
 	
 	virtual void EnableActions();

@@ -23,5 +23,9 @@ class STWINSLEGACY_API IDamageable
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	
-	void virtual TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection, float StunDuration) = 0;
+	void virtual TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection, float StunDuration) PURE_VIRTUAL(IDamageable::TakeDamage, );
+	
+	void virtual DeathAnimationNotify() PURE_VIRTUAL(IDamageable::DeathAnimationNotify, );
+	
+	void virtual Death() PURE_VIRTUAL(IDamageable::Death, );
 };

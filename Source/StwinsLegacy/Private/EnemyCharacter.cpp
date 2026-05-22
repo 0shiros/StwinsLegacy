@@ -103,15 +103,15 @@ FVector AEnemyCharacter::Fleeing(APlayerCharacter* PlayerCharacter)
 	return FleePoint;
 }
 
-void AEnemyCharacter::TakeDamage(const float DamageAmount, const float KnockbackForce, const FVector KnockbackDirection, const float StunDuration)
-{	
-	Super::TakeDamage(DamageAmount, KnockbackForce, KnockbackDirection, StunDuration);
-}
-
 void AEnemyCharacter::OnSpawnFinished()
 {
 	ParticleEffect->Deactivate();
 	EnableActions();
 	OnCanMove.ExecuteIfBound(true);
 	OnCanAttack.ExecuteIfBound(true);
+}
+
+void AEnemyCharacter::Death()
+{
+	Destroy();
 }

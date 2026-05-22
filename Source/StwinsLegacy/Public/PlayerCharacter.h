@@ -53,7 +53,7 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimationSpecialAttack")
 	TObjectPtr<UAnimMontage> SpecialAttackMontage;
-		
+			
 private :
 	
 	TMap<EAttackType, float> LastAttackTimes;
@@ -98,7 +98,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SpecialAttack")
 	void SpecialAttack(EAttackType AttackType);
 	
-	void virtual TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection, float StunDuration) override;
+	UFUNCTION(BlueprintCallable, Category = "Death")
+	virtual void Death() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "State")
 	void SetCanMove(bool bNewCanMove) { bCanMove = bNewCanMove; }

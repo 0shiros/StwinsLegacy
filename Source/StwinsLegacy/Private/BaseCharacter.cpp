@@ -25,7 +25,7 @@ void ABaseCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVecto
 	
 	if (CurrentHealth <= 0)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Character Died"));
+		DeathAnimationNotify();
 	}
 		
 	if (StunDuration > 0.f)
@@ -42,6 +42,18 @@ void ABaseCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVecto
 			false
 		);
 	}
+}
+
+void ABaseCharacter::DeathAnimationNotify()
+{
+	if (!IsValid(DeathMontage))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Death Montage Not Valid"));
+		Death();
+		return;
+	}
+	
+	PlayAnimMontage(DeathMontage);
 }
 
 void ABaseCharacter::DisableActions()

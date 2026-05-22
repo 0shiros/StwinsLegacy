@@ -44,7 +44,5 @@ public:
 	void SwitchAnimMontage();
 	
 	UFUNCTION(BlueprintCallable, Category = "Attack")
-	void ResetBasicAttackCombo();
-	
-	
+	void ResetBasicAttackCombo();	
 };

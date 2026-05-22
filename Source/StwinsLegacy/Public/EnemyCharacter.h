@@ -48,11 +48,12 @@ public:
 	void OrientEnemyToTarget(const APlayerCharacter* Player);
 	
 	virtual FVector Fleeing(APlayerCharacter* PlayerCharacter);
-	
-	virtual void TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection, float StunDuration) override;
-	
+		
 	EEnemyType GetEnemyType() const {return EnemyStats.EnemyType;}
 	
 	UFUNCTION()
 	void OnSpawnFinished();	
+	
+	UFUNCTION(BlueprintCallable, Category = "Death")
+	virtual void Death() override;
 };
