@@ -70,7 +70,7 @@ void AAIControllerEnemy::EnemyAttack()
 		return;
 	}
 	
-	ControlledEnemy->Attack(PlayerCharacter);
+	ControlledEnemy->AttackAnimationNotify();
 }
 
 void AAIControllerEnemy::EnemyFleePointChanged()

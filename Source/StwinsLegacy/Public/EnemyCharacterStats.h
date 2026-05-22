@@ -46,6 +46,9 @@ struct STWINSLEGACY_API FEnemyCharacterStats : public FBaseCharacterStats
 	float AttackCooldown = 1.f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	float AttackSpeed = 1.f; //Animation play rate multiplier
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float AttackCooldownMultiplier = 1.f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")

@@ -18,7 +18,7 @@ class STWINSLEGACY_API AEnemyCharacter : public ABaseCharacter
 	GENERATED_BODY()
 
 public:
-	AEnemyCharacter();	
+	AEnemyCharacter();		
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ParticleAnimation")
 	TObjectPtr<UParticleSystemComponent> ParticleEffect;
@@ -38,6 +38,9 @@ public:
 	void InitialiseCharacterStats();
 	
 	virtual void SpawnAnimation();	
+	
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	virtual void AttackAnimationNotify() PURE_VIRTUAL(AEnemyCharacter::AttackAnimationNotify, );
 	
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	virtual void Attack(APlayerCharacter* Player);

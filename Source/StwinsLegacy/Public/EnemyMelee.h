@@ -15,11 +15,36 @@ public:
 	// Sets default values for this character's properties
 	AEnemyMelee();
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attack")
+	bool bSaveAttack;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attack")
+	bool bIsAttacking;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attack")
+	uint8 AttackComboCount;
+	
+	//Animations
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimationAttack")
+	TArray<TObjectPtr<UAnimMontage>> AttackMontages;
+	
 protected:
 	
 	virtual void SpawnAnimation() override;
 	
 public:
 	
+	virtual void AttackAnimationNotify() override;
+	
 	virtual void Attack(APlayerCharacter* Target) override;
+	
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	void ComboBasicAttackSave();
+	
+	void SwitchAnimMontage();
+	
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	void ResetBasicAttackCombo();
+	
+	
 };

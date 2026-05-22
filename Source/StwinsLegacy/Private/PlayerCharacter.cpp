@@ -86,8 +86,7 @@ bool APlayerCharacter::CanAttack(EAttackType AttackType)
 }
 
 void APlayerCharacter::BasicAttack(EAttackType AttackType)
-{		
-	
+{			
 	float AttackRange = PlayerStats.AttackRanges[AttackType] * PlayerStats.AttackRangeMultipliers[AttackType];
 	float AttackRadius = PlayerStats.AttackRadius[AttackType];
 	float AttackMultiplier = PlayerStats.AttackMultipliers[AttackType];
@@ -137,8 +136,8 @@ void APlayerCharacter::BasicAttack(EAttackType AttackType)
 		}
 	}
 	
-	FVector RightEdge = GetActorLocation() + Forward.RotateAngleAxis( AttackRadius, FVector::UpVector) * AttackRange;
-	FVector LeftEdge  = GetActorLocation()  + Forward.RotateAngleAxis(-AttackRadius, FVector::UpVector) * AttackRange;
+	//FVector RightEdge = GetActorLocation() + Forward.RotateAngleAxis( AttackRadius, FVector::UpVector) * AttackRange;
+	//FVector LeftEdge  = GetActorLocation()  + Forward.RotateAngleAxis(-AttackRadius, FVector::UpVector) * AttackRange;
 
 	//DrawDebugLine(GetWorld(), GetActorLocation() , RightEdge, FColor::Red, false, 0.f, 0, 2.f);
 	//DrawDebugLine(GetWorld(), GetActorLocation() , LeftEdge,  FColor::Red, false, 0.f, 0, 2.f);
@@ -175,8 +174,13 @@ void APlayerCharacter::ComboBasicAttackSave()
 
 void APlayerCharacter::SwitchAnimMontage()
 {	
+	if (BasicAttackMontages.IsEmpty())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Basic Attack Montages Not Valid"));
+		return;
+	}
 	UAnimMontage* Montage = BasicAttackMontages[AttackComboCount];
-	AttackComboCount = (AttackComboCount + 1) % 4;
+	AttackComboCount = (AttackComboCount + 1) % BasicAttackMontages.Num();
 	PlayAnimMontage(Montage, PlayerStats.AttackSpeedMultipliers[EAttackType::Basic]);	
 }
 

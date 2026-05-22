@@ -41,7 +41,6 @@ void AEnemyCharacter::InitialiseCharacterStats()
 
 void AEnemyCharacter::SpawnAnimation()
 {	
-	GetMesh()->SetVisibility(false);
 	ParticleEffect->SetTemplate(EnemyData->SpawnParticleEffect);	
 	ParticleEffect->Activate(true);
 
@@ -111,7 +110,6 @@ void AEnemyCharacter::TakeDamage(const float DamageAmount, const float Knockback
 
 void AEnemyCharacter::OnSpawnFinished()
 {
-	GetMesh()->SetVisibility(true);
 	ParticleEffect->Deactivate();
 	EnableActions();
 	OnCanMove.ExecuteIfBound(true);
