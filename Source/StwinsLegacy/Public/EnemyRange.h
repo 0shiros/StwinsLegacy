@@ -17,9 +17,9 @@ public:
 
 protected:
 	
-	virtual void SpawnAnimation(UEnemyData* EnemyData) override;
+	virtual void SpawnAnimation() override;
 
 public :
 	
-	virtual void Attack() override;
+	virtual void Attack(APlayerCharacter* Target) override;
 };

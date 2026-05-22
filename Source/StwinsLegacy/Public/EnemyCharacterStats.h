@@ -47,6 +47,9 @@ struct STWINSLEGACY_API FEnemyCharacterStats : public FBaseCharacterStats
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float AttackCooldownMultiplier = 1.f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	float KnockbackForce = 0.f;
 		
 	//Melee
 	
@@ -59,4 +62,10 @@ struct STWINSLEGACY_API FEnemyCharacterStats : public FBaseCharacterStats
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float ProjectileSpeed = 1000.f;		
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	float MultiplierAttackRangeToFlee = 1.25f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	float ProjectileSpawnOffSet = 100.f;
 };

@@ -11,13 +11,14 @@ AEnemyMelee::AEnemyMelee()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-void AEnemyMelee::SpawnAnimation(UEnemyData* EnemyData)
+void AEnemyMelee::SpawnAnimation()
 {
-	Super::SpawnAnimation(EnemyData);
+	Super::SpawnAnimation();
 }
 
-void AEnemyMelee::Attack()
+void AEnemyMelee::Attack(APlayerCharacter* Target)
 {
+	Super::Attack(Target);
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, FString::Printf(TEXT("Method of child class %s called"), *GetName()));
 }
 

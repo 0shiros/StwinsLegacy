@@ -30,8 +30,7 @@ void ABaseCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVecto
 		
 	if (StunDuration > 0.f)
 	{
-		bCanMove = false;
-		bCanAttack = false;
+		DisableActions();
 		
 		FTimerHandle UnusedHandle;
 		
@@ -43,6 +42,12 @@ void ABaseCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVecto
 			false
 		);
 	}
+}
+
+void ABaseCharacter::DisableActions()
+{	
+	bCanMove = false;
+	bCanAttack = false;
 }
 
 void ABaseCharacter::EnableActions()

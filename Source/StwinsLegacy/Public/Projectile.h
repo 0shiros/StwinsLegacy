@@ -6,6 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
+class UProjectileMovementComponent;
+class UEnemyData;
+class USphereComponent;
+
 UCLASS(Abstract)
 class STWINSLEGACY_API AProjectile : public AActor
 {
@@ -14,12 +18,21 @@ class STWINSLEGACY_API AProjectile : public AActor
 public:
 	// Sets default values for this actor's properties
 	AProjectile();
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collider")
+	TObjectPtr<USphereComponent> ProjectileCollider;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
+	TObjectPtr<UStaticMeshComponent> ProjectileMesh;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
+	
+	UPROPERTY()
+	UEnemyData* EnemyData;
+	
+	UFUNCTION()
+	void OnProjectileOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 };

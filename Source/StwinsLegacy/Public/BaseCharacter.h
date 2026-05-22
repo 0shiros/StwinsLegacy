@@ -19,10 +19,10 @@ public:
 	
 	// States
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-	bool bCanMove = false;
+	bool bCanMove = true;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
-	bool bCanAttack = false;
+	bool bCanAttack = true;
 	
 	// Stats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
@@ -30,6 +30,8 @@ public:
 		
 	// Combat
 	virtual void TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection, float StunDuration) override;
+	
+	virtual void DisableActions();
 	
 	virtual void EnableActions();
 };

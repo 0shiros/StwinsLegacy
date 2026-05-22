@@ -3,8 +3,9 @@
 
 #include "EnemyCharacter.h"
 
-#include "AIControllerEnemy.h"
 #include "EnemyData.h"
+#include "NavigationSystem.h"
+#include "PlayerCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 
@@ -16,7 +17,6 @@ AEnemyCharacter::AEnemyCharacter()
 	PrimaryActorTick.bCanEverTick = false;
 	
 	// Set up AI Controller
-	AIControllerClass = AAIControllerEnemy::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 	GetCharacterMovement()->GetNavMovementProperties()->bUseAccelerationForPaths = true;
 	GetCharacterMovement()->GetNavMovementProperties()->bUseFixedBrakingDistanceForPaths = true;
@@ -29,16 +29,17 @@ AEnemyCharacter::AEnemyCharacter()
 	ParticleEffect->bAutoDestroy = false;
 }
 
-void AEnemyCharacter::InitialiseCharacterStats(UEnemyData* EnemyData)
+void AEnemyCharacter::InitialiseCharacterStats()
 {
+	DisableActions();
 	EnemyStats = EnemyData->EnemyStats;
 	GetCharacterMovement()->MaxWalkSpeed = EnemyStats.BaseSpeed;	
 	CurrentHealth = EnemyStats.MaxHealth;
 	
-	SpawnAnimation(EnemyData);
+	SpawnAnimation();
 }
 
-void AEnemyCharacter::SpawnAnimation(UEnemyData* EnemyData)
+void AEnemyCharacter::SpawnAnimation()
 {	
 	GetMesh()->SetVisibility(false);
 	ParticleEffect->SetTemplate(EnemyData->SpawnParticleEffect);	
@@ -55,7 +56,55 @@ void AEnemyCharacter::SpawnAnimation(UEnemyData* EnemyData)
 	);	
 }
 
-void AEnemyCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection, float StunDuration)
+void AEnemyCharacter::Attack(APlayerCharacter* Player)
+{
+	OrientEnemyToTarget(Player);
+}
+
+void AEnemyCharacter::OrientEnemyToTarget(const APlayerCharacter* Player)
+{
+	if (!Player) return;
+
+	FVector DirectionToTarget = Player->GetActorLocation() - GetActorLocation();
+	DirectionToTarget.Z = 0.f;
+
+	if (!DirectionToTarget.IsNearlyZero())
+	{
+		FRotator TargetRotation = DirectionToTarget.Rotation();
+		SetActorRotation(TargetRotation);
+	}
+}
+
+FVector AEnemyCharacter::Fleeing(APlayerCharacter* PlayerCharacter)
+{
+	const FVector PlayerLocation = PlayerCharacter->GetActorLocation();
+	const FVector EnemyLocation = GetActorLocation();
+
+	FVector FleeDirection = (EnemyLocation - PlayerLocation).GetSafeNormal();
+	FleeDirection.Z = EnemyLocation.Z; 
+
+	const float FleeDistance = EnemyStats.AttackRanges[EnemyStats.EnemyType] * EnemyStats.MultiplierAttackRangeToFlee;
+
+	const FVector FleeOrigin = EnemyLocation + (FleeDirection * FleeDistance);
+
+	if (const TObjectPtr<UNavigationSystemV1> NavSys = UNavigationSystemV1::GetCurrent(GetWorld()))
+	{
+		FNavLocation RandomFleePoint;
+
+		if (NavSys->GetRandomPointInNavigableRadius(FleeOrigin, 200.f, RandomFleePoint))
+		{
+			return RandomFleePoint.Location;
+		}
+	}
+	
+	// If no valid point is found, return a point directly opposite the player at the desired flee distance
+	FVector FleePoint = EnemyLocation + (FleeDirection * FleeDistance);
+	FleePoint.Z = EnemyLocation.Z;	
+	
+	return FleePoint;
+}
+
+void AEnemyCharacter::TakeDamage(const float DamageAmount, const float KnockbackForce, const FVector KnockbackDirection, const float StunDuration)
 {	
 	Super::TakeDamage(DamageAmount, KnockbackForce, KnockbackDirection, StunDuration);
 }
@@ -64,9 +113,7 @@ void AEnemyCharacter::OnSpawnFinished()
 {
 	GetMesh()->SetVisibility(true);
 	ParticleEffect->Deactivate();
-}
-
-void AEnemyCharacter::EnableActions()
-{
-	Super::EnableActions();
+	EnableActions();
+	OnCanMove.ExecuteIfBound(true);
+	OnCanAttack.ExecuteIfBound(true);
 }

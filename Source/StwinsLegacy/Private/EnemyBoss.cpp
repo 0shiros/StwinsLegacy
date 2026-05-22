@@ -11,13 +11,14 @@ AEnemyBoss::AEnemyBoss()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-void AEnemyBoss::SpawnAnimation(UEnemyData* EnemyData)
+void AEnemyBoss::SpawnAnimation()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Boss Spawn Animation"));
 }
 
-void AEnemyBoss::Attack()
+void AEnemyBoss::Attack(APlayerCharacter* Target)
 {
-	
+	Super::Attack(Target);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Boss Attacking"));
 }
 

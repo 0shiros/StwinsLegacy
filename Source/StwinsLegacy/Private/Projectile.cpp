@@ -3,24 +3,48 @@
 
 #include "Projectile.h"
 
+#include "EnemyData.h"
+#include "PlayerCharacter.h"
+#include "Components/SphereComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+
 
 // Sets default values
 AProjectile::AProjectile()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-}
-
-// Called when the game starts or when spawned
-void AProjectile::BeginPlay()
-{
-	Super::BeginPlay();
+	PrimaryActorTick.bCanEverTick = false;
 	
+	ProjectileCollider = CreateDefaultSubobject<USphereComponent>(TEXT("ProjectileCollider"));
+	RootComponent = ProjectileCollider;
+	ProjectileCollider->SetCollisionProfileName(TEXT("EnemyProjectile"));
+	ProjectileCollider->SetEnableGravity(false);
+	
+	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
+	ProjectileMesh->SetupAttachment(RootComponent);
+	ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ProjectileMesh->SetEnableGravity(false);
+	
+	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
+	ProjectileMovement->ProjectileGravityScale = 0.f;
+	
+	ProjectileCollider->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnProjectileOverlap);
 }
 
-// Called every frame
-void AProjectile::Tick(float DeltaTime)
+void AProjectile::OnProjectileOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{	
+	if (APlayerCharacter* Player = Cast<APlayerCharacter>(OtherActor))
+	{
+		Player->TakeDamage(EnemyData->EnemyStats.AttackMultiplier * EnemyData->EnemyStats.BaseAttack, EnemyData->EnemyStats.KnockbackForce, GetActorForwardVector(), EnemyData->EnemyStats.StunDuration);
+		Destroy();
+	}
+}
+
+void AProjectile::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	Super::Tick(DeltaTime);
+	ProjectileCollider->OnComponentBeginOverlap.RemoveDynamic(this, &AProjectile::OnProjectileOverlap);
+	
+	Super::EndPlay(EndPlayReason);
 }
 

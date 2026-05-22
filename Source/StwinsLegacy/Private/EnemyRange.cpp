@@ -3,6 +3,11 @@
 
 #include "EnemyRange.h"
 
+#include "EnemyData.h"
+#include "PlayerCharacter.h"
+#include "Projectile.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+
 
 // Sets default values
 AEnemyRange::AEnemyRange()
@@ -11,13 +16,38 @@ AEnemyRange::AEnemyRange()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-void AEnemyRange::SpawnAnimation(UEnemyData* EnemyData)
+void AEnemyRange::SpawnAnimation()
 {
-	Super::SpawnAnimation(EnemyData);
+	Super::SpawnAnimation();
+	
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Ranged Enemy Spawn Animation"));
 }
 
-void AEnemyRange::Attack()
-{
+void AEnemyRange::Attack(APlayerCharacter* Target)
+{	
+	Super::Attack(Target);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Ranged Enemy Attacking"));
 	
+	UWorld* World = GetWorld();
+	if (!World || !EnemyData || !EnemyData->EnemyStats.ProjectileClass)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("World, EnemyData, or ProjectileClass is null in Ranged Enemy Attack"));
+		return;
+	}
+	
+	FVector SpawnLocation = GetActorLocation() + GetActorForwardVector() * EnemyData->EnemyStats.ProjectileSpawnOffSet;
+	
+	FRotator SpawnRotation = (Target->GetActorLocation() - GetActorLocation()).Rotation();
+	
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	if (AProjectile* SpawnedProjectile = World->SpawnActor<AProjectile>(EnemyData->EnemyStats.ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams))
+	{
+		SpawnedProjectile->EnemyData = EnemyData;
+		SpawnedProjectile->ProjectileMovement->InitialSpeed = EnemyData->EnemyStats.ProjectileSpeed;
+		SpawnedProjectile->ProjectileMovement->MaxSpeed = EnemyData->EnemyStats.ProjectileSpeed;
+		SpawnedProjectile->ProjectileMovement->Velocity = SpawnRotation.Vector() * EnemyData->EnemyStats.ProjectileSpeed;
+	}	
 }
 

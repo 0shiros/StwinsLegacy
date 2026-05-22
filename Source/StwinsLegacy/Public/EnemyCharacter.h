@@ -7,6 +7,11 @@
 #include "EnemyCharacterStats.h"
 #include "EnemyCharacter.generated.h"
 
+class APlayerCharacter;
+
+DECLARE_DELEGATE_OneParam(FOnCanMove, const bool);
+DECLARE_DELEGATE_OneParam(FOnCanAttack, const bool);
+
 UCLASS(Abstract)
 class STWINSLEGACY_API AEnemyCharacter : public ABaseCharacter
 {
@@ -18,17 +23,28 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ParticleAnimation")
 	TObjectPtr<UParticleSystemComponent> ParticleEffect;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyData")
+	TObjectPtr<class UEnemyData> EnemyData;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	FEnemyCharacterStats EnemyStats;	
+	FEnemyCharacterStats EnemyStats;
+	
+	// Delegate 
+	FOnCanMove OnCanMove;
+	FOnCanAttack OnCanAttack;
 	
 public:
 	UFUNCTION(BlueprintCallable, Category = "Initialization")
-	void InitialiseCharacterStats(class UEnemyData* EnemyData);
+	void InitialiseCharacterStats();
 	
-	virtual void SpawnAnimation(UEnemyData* EnemyData);	
+	virtual void SpawnAnimation();	
 	
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	virtual void Attack() PURE_VIRTUAL(AEnemyCharacter::Attack, );
+	virtual void Attack(APlayerCharacter* Player);
+	
+	void OrientEnemyToTarget(const APlayerCharacter* Player);
+	
+	virtual FVector Fleeing(APlayerCharacter* PlayerCharacter);
 	
 	virtual void TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection, float StunDuration) override;
 	
@@ -36,6 +52,4 @@ public:
 	
 	UFUNCTION()
 	void OnSpawnFinished();	
-	
-	virtual void EnableActions() override;
 };

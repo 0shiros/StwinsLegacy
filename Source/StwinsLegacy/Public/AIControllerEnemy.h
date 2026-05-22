@@ -21,12 +21,24 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy")
 	TObjectPtr<class AEnemyCharacter> ControlledEnemy;		
-	
+		
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Target")
 	TObjectPtr<class APlayerCharacter> PlayerCharacter;
 	
 protected:
-	
 	virtual void OnPossess(APawn* InPawn) override;
 
+	void UpdateDistanceToTarget();
+	
+	void OnEnemyCanMove(bool bCanMove);
+	
+	void OnEnemyCanAttack(bool bCanAttack);
+	
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	void EnemyAttack();
+	
+	UFUNCTION(BlueprintCallable, Category = "Flee")
+	void EnemyFleePointChanged();	
+	
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 };
