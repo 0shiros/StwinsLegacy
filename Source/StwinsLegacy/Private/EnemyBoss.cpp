@@ -3,6 +3,8 @@
 
 #include "EnemyBoss.h"
 
+#include "EnemyData.h"
+
 
 // Sets default values
 AEnemyBoss::AEnemyBoss()
@@ -13,12 +15,22 @@ AEnemyBoss::AEnemyBoss()
 
 void AEnemyBoss::SpawnAnimation()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Boss Spawn Animation"));
+	Super::SpawnAnimation();
+}
+
+void AEnemyBoss::AttackAnimationNotify()
+{
+	if (!IsValid(BossAttackMontage))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Boss Attack Montage Not Valid"));
+		return;
+	}
+	
+	PlayAnimMontage(BossAttackMontage, EnemyData->EnemyStats.AttackSpeed);	
 }
 
 void AEnemyBoss::Attack()
 {
 	Super::Attack();
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Boss Attacking"));
 }
 

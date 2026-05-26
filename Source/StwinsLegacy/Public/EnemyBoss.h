@@ -15,11 +15,17 @@ public:
 	// Sets default values for this character's properties
 	AEnemyBoss();
 	
+	//Animations
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Animations")
+	TObjectPtr<UAnimMontage> BossAttackMontage;
+	
 protected:
 	
 	virtual void SpawnAnimation() override;
 	
 public :
+	
+	virtual void AttackAnimationNotify() override;
 	
 	virtual void Attack() override;
 };

@@ -16,7 +16,7 @@ void ABaseCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVecto
 {
 	if (CurrentHealth <= 0)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Player Character Already Dead"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Character %s is already dead."), *GetName()));
 		return;
 	}
 	
