@@ -23,6 +23,17 @@ void AEnemyRange::SpawnAnimation()
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Ranged Enemy Spawn Animation"));
 }
 
+void AEnemyRange::AttackAnimationNotify()
+{
+	if (!IsValid(RangeAttackMontage))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Range Attack Montage Not Valid"));
+		return;
+	}
+	
+	PlayAnimMontage(RangeAttackMontage, EnemyData->EnemyStats.AttackSpeed);	
+}
+
 void AEnemyRange::Attack()
 {	
 	Super::Attack();

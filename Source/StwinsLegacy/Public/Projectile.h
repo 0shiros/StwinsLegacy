@@ -21,10 +21,7 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collider")
 	TObjectPtr<USphereComponent> ProjectileCollider;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
-	TObjectPtr<UStaticMeshComponent> ProjectileMesh;
-	
+		
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
 	

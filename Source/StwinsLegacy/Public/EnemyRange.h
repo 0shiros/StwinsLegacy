@@ -14,12 +14,18 @@ class STWINSLEGACY_API AEnemyRange : public AEnemyCharacter
 public:
 	// Sets default values for this character's properties
 	AEnemyRange();
+	
+	//Animations
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimationAttack")
+	TObjectPtr<UAnimMontage> RangeAttackMontage;
 
 protected:
 	
 	virtual void SpawnAnimation() override;
 
 public :
+	
+	virtual void AttackAnimationNotify() override;
 	
 	virtual void Attack() override;
 };

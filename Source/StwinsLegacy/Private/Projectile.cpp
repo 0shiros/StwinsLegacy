@@ -19,12 +19,7 @@ AProjectile::AProjectile()
 	RootComponent = ProjectileCollider;
 	ProjectileCollider->SetCollisionProfileName(TEXT("EnemyProjectile"));
 	ProjectileCollider->SetEnableGravity(false);
-	
-	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
-	ProjectileMesh->SetupAttachment(RootComponent);
-	ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	ProjectileMesh->SetEnableGravity(false);
-	
+		
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
 	ProjectileMovement->ProjectileGravityScale = 0.f;
 	
@@ -36,6 +31,12 @@ void AProjectile::OnProjectileOverlap(UPrimitiveComponent* OverlappedComponent, 
 {	
 	if (APlayerCharacter* Player = Cast<APlayerCharacter>(OtherActor))
 	{
+		if (!EnemyData)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("EnemyData is null in Projectile OnProjectileOverlap"));
+			return;
+		}
+		
 		Player->TakeDamage(EnemyData->EnemyStats.AttackMultiplier * EnemyData->EnemyStats.BaseAttack, EnemyData->EnemyStats.KnockbackForce, GetActorForwardVector(), EnemyData->EnemyStats.StunDuration);
 		Destroy();
 	}
