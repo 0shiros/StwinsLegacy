@@ -4,6 +4,7 @@
 #include "EnemyCharacter.h"
 
 #include "EnemyData.h"
+#include "MyGameInstance.h"
 #include "NavigationSystem.h"
 #include "PlayerCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -32,6 +33,7 @@ AEnemyCharacter::AEnemyCharacter()
 void AEnemyCharacter::InitialiseCharacterStats()
 {
 	DisableActions();
+	GameInstance = Cast<UMyGameInstance>(GetWorld()->GetGameInstance());
 	EnemyStats = EnemyData->EnemyStats;
 	GetCharacterMovement()->MaxWalkSpeed = EnemyStats.BaseSpeed;	
 	CurrentHealth = EnemyStats.MaxHealth;
@@ -110,7 +112,9 @@ void AEnemyCharacter::OnSpawnFinished()
 }
 
 void AEnemyCharacter::Death()
-{
+{	
+	PlayerReference->GetSoul(EnemyData->SoulsDropped);
+	GameInstance->AddScore(EnemyData->Score);
 	Destroy();
 }
 

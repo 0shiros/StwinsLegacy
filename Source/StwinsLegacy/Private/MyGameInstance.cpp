@@ -38,3 +38,9 @@ void UMyGameInstance::SaveGame()
 	
 	UGameplayStatics::SaveGameToSlot(CurrentSaveGame, SaveSlotName, 0);	
 }
+
+void UMyGameInstance::AddScore(int Score)
+{
+	CurrentScore += Score;
+	OnScoreUpdated.Broadcast(CurrentScore);
+}

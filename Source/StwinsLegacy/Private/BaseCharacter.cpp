@@ -17,6 +17,7 @@ void ABaseCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVecto
 	if (CurrentHealth <= 0)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Character %s is already dead."), *GetName()));
+		Death();
 		return;
 	}
 	
@@ -51,7 +52,7 @@ void ABaseCharacter::DeathAnimationNotify()
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Death Montage Not Valid"));
 		Death();
 		return;
-	}
+	}	
 	
 	PlayAnimMontage(DeathMontage);
 	DisableActions();

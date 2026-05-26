@@ -7,6 +7,9 @@
 #include "PlayerCharacterStats.h"
 #include "PlayerCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float, NewHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSoulsChanged, int, NewSoulQuantity);
+
 UCLASS(Abstract)
 class STWINSLEGACY_API APlayerCharacter : public ABaseCharacter
 {
@@ -26,6 +29,9 @@ public:
 	//Stats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	FPlayerCharacterStats PlayerStats;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Stats")
+	int SoulQuantity = 0;
 	
 	//References	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
@@ -53,6 +59,13 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimationSpecialAttack")
 	TObjectPtr<UAnimMontage> SpecialAttackMontage;
+	
+	// Delegates
+	UPROPERTY(VisibleAnywhere, BlueprintAssignable, Category = "Delegates")
+	FOnHealthChanged OnHealthChanged;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintAssignable, Category = "Delegates")
+	FOnSoulsChanged OnSoulsChanged;
 			
 private :
 	
@@ -98,9 +111,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SpecialAttack")
 	void SpecialAttack(EAttackType AttackType);
 	
+	virtual void TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection, float StunDuration) override;
+	
 	UFUNCTION(BlueprintCallable, Category = "Death")
 	virtual void Death() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "State")
 	void SetCanMove(bool bNewCanMove) { bCanMove = bNewCanMove; }
+	
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	float UpdateHealthBar();
+	
+	void GetSoul(int SoulsDropped);
 };

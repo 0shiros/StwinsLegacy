@@ -21,7 +21,10 @@ public:
 	AEnemyCharacter();		
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player")
-	APlayerCharacter* PlayerReference;
+	TObjectPtr<APlayerCharacter> PlayerReference;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MyGameInstance")
+	TObjectPtr<class UMyGameInstance> GameInstance;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ParticleAnimation")
 	TObjectPtr<UParticleSystemComponent> ParticleEffect;

@@ -6,9 +6,8 @@
 #include "Engine/GameInstance.h"
 #include "MyGameInstance.generated.h"
 
-/**
- * 
- */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreUpdated, int, NewScore);
+
 UCLASS()
 class STWINSLEGACY_API UMyGameInstance : public UGameInstance
 {
@@ -19,6 +18,13 @@ class STWINSLEGACY_API UMyGameInstance : public UGameInstance
 	
 	UPROPERTY(VisibleAnywhere, Category = "SaveGame")
 	TObjectPtr<class UMySaveGame> CurrentSaveGame;
+	
+	// Score
+	int CurrentScore = 0;
+	
+	// Delegates
+	UPROPERTY(VisibleAnywhere, BlueprintAssignable, Category = "Delegates")
+	FOnScoreUpdated OnScoreUpdated;
 	
 protected:
 	virtual void Init() override;
@@ -31,4 +37,6 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "SaveGame")
 	UMySaveGame* GetCurrentSaveGame() const { return CurrentSaveGame; }
+
+	void AddScore(int Score);
 };

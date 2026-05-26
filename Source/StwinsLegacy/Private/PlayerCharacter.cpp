@@ -317,9 +317,28 @@ void APlayerCharacter::SpecialAttack(EAttackType AttackType)
 	//DrawDebugSphere(GetWorld(), GetActorLocation(), AttackRange, 12, FColor::Green, false, 0.5f, 0, 2.f);
 }
 
+void APlayerCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection,
+	float StunDuration)
+{
+	Super::TakeDamage(DamageAmount, KnockbackForce, KnockbackDirection, StunDuration);
+	
+	OnHealthChanged.Broadcast(UpdateHealthBar());
+}
+
 void APlayerCharacter::Death()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Died, UI Game Over Screen Should Appear"));
+}
+
+float APlayerCharacter::UpdateHealthBar()
+{
+	return static_cast<float>(CurrentHealth) / PlayerStats.MaxHealth;
+}
+
+void APlayerCharacter::GetSoul(int SoulsDropped)
+{
+	SoulQuantity += SoulsDropped;
+	OnSoulsChanged.Broadcast(SoulQuantity);
 }
 
 
