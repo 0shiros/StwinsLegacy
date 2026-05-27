@@ -113,7 +113,7 @@ void AEnemyCharacter::OnSpawnFinished()
 
 void AEnemyCharacter::Death()
 {	
-	PlayerReference->GetSoul(EnemyData->SoulsDropped);
+	GameInstance->AddSouls(EnemyData->SoulsDropped);
 	GameInstance->AddScore(EnemyData->Score);
 	Destroy();
 }

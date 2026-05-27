@@ -7,24 +7,30 @@
 #include "MyGameInstance.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreUpdated, int, NewScore);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSoulsChanged, int, NewSoulQuantity);
 
 UCLASS()
 class STWINSLEGACY_API UMyGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 	
+public:
 	UPROPERTY(VisibleAnywhere, Category = "SaveGame")
 	FString SaveSlotName = TEXT("PlayerSaveSlot");	
 	
 	UPROPERTY(VisibleAnywhere, Category = "SaveGame")
 	TObjectPtr<class UMySaveGame> CurrentSaveGame;
 	
-	// Score
-	int CurrentScore = 0;
+	// Player Progress
+	int CurrentScore = 0;	
+	int SoulsQuantity = 0;
 	
 	// Delegates
 	UPROPERTY(VisibleAnywhere, BlueprintAssignable, Category = "Delegates")
 	FOnScoreUpdated OnScoreUpdated;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintAssignable, Category = "Delegates")
+	FOnSoulsChanged OnSoulsChanged;
 	
 protected:
 	virtual void Init() override;
@@ -39,4 +45,6 @@ public:
 	UMySaveGame* GetCurrentSaveGame() const { return CurrentSaveGame; }
 
 	void AddScore(int Score);
+	
+	void AddSouls(int Quantity);
 };

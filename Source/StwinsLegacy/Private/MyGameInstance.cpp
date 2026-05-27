@@ -44,3 +44,9 @@ void UMyGameInstance::AddScore(int Score)
 	CurrentScore += Score;
 	OnScoreUpdated.Broadcast(CurrentScore);
 }
+
+void UMyGameInstance::AddSouls(int Quantity)
+{
+	SoulsQuantity += Quantity;
+	OnSoulsChanged.Broadcast(SoulsQuantity);
+}

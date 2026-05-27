@@ -4,11 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
+#include "ItemEnhanceData.h"
 #include "PlayerCharacterStats.h"
 #include "PlayerCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float, NewHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSoulsChanged, int, NewSoulQuantity);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStoreEntered, UItemEnhanceData*, StoreItem);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStoreExited);
 
 UCLASS(Abstract)
 class STWINSLEGACY_API APlayerCharacter : public ABaseCharacter
@@ -28,10 +30,7 @@ public:
 				
 	//Stats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	FPlayerCharacterStats PlayerStats;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Stats")
-	int SoulQuantity = 0;
+	FPlayerCharacterStats PlayerStats;	
 	
 	//References	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
@@ -65,7 +64,10 @@ public:
 	FOnHealthChanged OnHealthChanged;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintAssignable, Category = "Delegates")
-	FOnSoulsChanged OnSoulsChanged;
+	FOnStoreEntered OnStoreEntered;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintAssignable, Category = "Delegates")
+	FOnStoreExited OnStoreExited;
 			
 private :
 	
@@ -119,8 +121,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "State")
 	void SetCanMove(bool bNewCanMove) { bCanMove = bNewCanMove; }
 	
+	//HUD
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	float UpdateHealthBar();
-	
-	void GetSoul(int SoulsDropped);
+	float UpdateHealthBar();		
 };

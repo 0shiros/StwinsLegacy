@@ -335,12 +335,6 @@ float APlayerCharacter::UpdateHealthBar()
 	return static_cast<float>(CurrentHealth) / PlayerStats.MaxHealth;
 }
 
-void APlayerCharacter::GetSoul(int SoulsDropped)
-{
-	SoulQuantity += SoulsDropped;
-	OnSoulsChanged.Broadcast(SoulQuantity);
-}
-
 
 
 
