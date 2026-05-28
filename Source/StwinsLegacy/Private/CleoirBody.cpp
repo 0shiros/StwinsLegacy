@@ -29,7 +29,7 @@ void UCleoirBody::ApplyEnhancement()
 
 void UCleoirBody::PlayerProtection()
 {	
-	if (!bHasPlayerBeenTouched)
+	if (!bHasPlayerBeenTouched && PlayerCharacter->Tags.Contains("Status.Invincible") == false)
 	{
 		PlayerCharacter->Tags.Add("Status.Invincible");
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Player is now invincible!"));

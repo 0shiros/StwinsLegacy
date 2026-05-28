@@ -64,13 +64,13 @@ public:
 	TObjectPtr<UAnimMontage> SpecialAttackMontage;
 	
 	// Delegates
-	UPROPERTY(VisibleAnywhere, BlueprintAssignable, Category = "Delegates")
+	UPROPERTY(VisibleAnywhere, BlueprintAssignable, BlueprintReadOnly, Category = "Delegates")
 	FOnHealthChanged OnHealthChanged;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintAssignable, Category = "Delegates")
+	UPROPERTY(VisibleAnywhere, BlueprintAssignable, BlueprintReadOnly, Category = "Delegates")
 	FOnStoreEntered OnStoreEntered;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintAssignable, Category = "Delegates")
+	UPROPERTY(VisibleAnywhere, BlueprintAssignable, BlueprintReadOnly, Category = "Delegates")
 	FOnStoreExited OnStoreExited;
 			
 private :

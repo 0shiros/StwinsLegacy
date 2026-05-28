@@ -19,13 +19,15 @@ UMandiaBoots::UMandiaBoots()
 
 void UMandiaBoots::ApplyEnhancement()
 {
-	PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed *= 1.5f; // Increase movement speed by 50%
+	PlayerCharacter->PlayerStats.BaseSpeed *= 1.5f; // Example: Increase player speed by 50%
+	PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed *= PlayerCharacter->PlayerStats.BaseSpeed; // Update the character's movement speed based on the new BaseSpeed
 	PlayerCharacter->PlayerStats.BaseDashDistance *= 1.5f; // Increase dash distance by 50%
 }
 
 void UMandiaBoots::RemoveEnhancement()
 {
-	PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed /= 1.5f; // Revert movement speed to normal
+	PlayerCharacter->PlayerStats.BaseSpeed /= 1.5f; // Revert player speed to original value
+	PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed /= PlayerCharacter->PlayerStats.BaseSpeed; // Revert dash distance to original value
 	PlayerCharacter->PlayerStats.BaseDashDistance /= 1.5f; // Revert dash distance to normal
 }
 
