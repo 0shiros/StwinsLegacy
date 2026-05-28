@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Store.generated.h"
 
+class UMyGameInstance;
 class UItemEnhanceData;
 class APlayerCharacter;
 
@@ -24,13 +25,23 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> StoreMesh;	
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Reference")
+	TObjectPtr<APlayerCharacter> PlayerReference;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Reference")
+	TObjectPtr<UMyGameInstance> GameInstanceReference;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Store")
 	TObjectPtr<UItemEnhanceData> ItemSellable;
 	
 protected:
 	
+	UFUNCTION(BlueprintCallable, Category = "Store")
+	void InitializeStore(UItemEnhanceData* ItemData);
+	
 	void SetItemPurchased(APlayerCharacter* Player);
 	
+	UFUNCTION(BlueprintCallable, Category = "Store")
 	void ItemSell();
 	
 	UFUNCTION()

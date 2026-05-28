@@ -20,7 +20,7 @@ enum class EEnhancementItemType : uint8
 	GamburCane UMETA(DisplayName = "Gambur Cane")
 };
 
-UCLASS()
+UCLASS(Blueprintable)
 class STWINSLEGACY_API UItemEnhanceData : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
@@ -36,5 +36,5 @@ public :
 	int Cost;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhancement Item Data")
-	UEnhancementItem* ItemComponent;
+	TSubclassOf<UEnhancementItem> EnhancementClass;
 };

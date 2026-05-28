@@ -3,6 +3,7 @@
 
 #include "EnemyCharacter.h"
 
+#include "CleoirBody.h"
 #include "EnemyData.h"
 #include "MyGameInstance.h"
 #include "NavigationSystem.h"
@@ -60,6 +61,11 @@ void AEnemyCharacter::SpawnAnimation()
 void AEnemyCharacter::Attack()
 {
 	OrientEnemyToTarget();
+
+	if (UCleoirBody* CleoirBody = Cast<UCleoirBody>(PlayerReference->GetComponentByClass(UCleoirBody::StaticClass())))
+	{
+		CleoirBody->bHasPlayerBeenTouched = true;
+	}
 }
 
 void AEnemyCharacter::OrientEnemyToTarget()

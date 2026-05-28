@@ -26,23 +26,29 @@ AStore::AStore()
 
 }
 
+void AStore::InitializeStore(UItemEnhanceData* ItemData)
+{
+	PlayerReference = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	GameInstanceReference = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance	(GetWorld()));
+	ItemSellable = ItemData;
+}
+
 void AStore::SetItemPurchased(APlayerCharacter* Player)
 {
-	UEnhancementItem* EnhancementItem = NewObject<UEnhancementItem>(Player);
+	UEnhancementItem* EnhancementItem = NewObject<UEnhancementItem>(Player, ItemSellable->EnhancementClass);
 	EnhancementItem->RegisterComponent();
+	Player->ActiveEnhancements.Add(ItemSellable->ItemName, EnhancementItem);
+	Destroy();
 }
 
 void AStore::ItemSell()
-{
-	APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
-	UMyGameInstance* GameInstance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(this));
-	
-	if (Player && GameInstance)
+{		
+	if (PlayerReference && GameInstanceReference)
 	{
-		if (GameInstance->SoulsQuantity >= ItemSellable->Cost)
+		if (GameInstanceReference->SoulsQuantity >= ItemSellable->Cost)
 		{
-			GameInstance->AddSouls(-ItemSellable->Cost);
-			SetItemPurchased(Player);
+			GameInstanceReference->AddSouls(-ItemSellable->Cost);
+			SetItemPurchased(PlayerReference);
 		}
 		else
 		{
@@ -54,18 +60,18 @@ void AStore::ItemSell()
 void AStore::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                      UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (APlayerCharacter* Player = Cast<APlayerCharacter>(OtherActor))
+	if (PlayerReference && OtherActor == PlayerReference)
 	{
-		Player->OnStoreEntered.Broadcast(ItemSellable);
+		PlayerReference->OnStoreEntered.Broadcast(this, ItemSellable);
 	}
 }
 
 void AStore::OnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (APlayerCharacter* Player = Cast<APlayerCharacter>(OtherActor))
+	if (PlayerReference && OtherActor == PlayerReference)
 	{
-		Player->OnStoreExited.Broadcast();
+		PlayerReference->OnStoreExited.Broadcast();
 	}
 }
 

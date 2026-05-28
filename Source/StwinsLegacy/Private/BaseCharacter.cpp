@@ -14,6 +14,13 @@ ABaseCharacter::ABaseCharacter()
 void ABaseCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection,
                                 float StunDuration)
 {
+	if (Tags.Contains("Status.Invincible"))
+	{
+		Tags.Remove("Status.Invincible");
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Character %s is invincible and ignored the damage."), *GetName()));
+		return;	
+	}
+	
 	if (CurrentHealth <= 0)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Character %s is already dead."), *GetName()));

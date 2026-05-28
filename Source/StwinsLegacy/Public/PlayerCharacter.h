@@ -8,8 +8,9 @@
 #include "PlayerCharacterStats.h"
 #include "PlayerCharacter.generated.h"
 
+class AStore;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float, NewHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStoreEntered, UItemEnhanceData*, StoreItem);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStoreEntered, AStore*, Store, UItemEnhanceData*, ItemData);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStoreExited);
 
 UCLASS(Abstract)
@@ -27,6 +28,9 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")	
 	TObjectPtr<class USpringArmComponent> SpringArm;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TMap<EEnhancementItemType, TObjectPtr<UEnhancementItem>> ActiveEnhancements;
 				
 	//Stats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
