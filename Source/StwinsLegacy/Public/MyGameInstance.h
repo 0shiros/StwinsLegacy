@@ -6,10 +6,13 @@
 #include "Engine/GameInstance.h"
 #include "MyGameInstance.generated.h"
 
+class UItemEnhanceData;
+enum class EEnhancementItemType : uint8;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreUpdated, int, NewScore);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSoulsChanged, int, NewSoulQuantity);
 
-UCLASS()
+UCLASS(Abstract)
 class STWINSLEGACY_API UMyGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
@@ -25,12 +28,15 @@ public:
 	int CurrentScore = 0;	
 	int SoulsQuantity = 0;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhancement")
+	TMap<EEnhancementItemType, UItemEnhanceData*> EnhancementItemDataMap;
+	
 	// Delegates
 	UPROPERTY(VisibleAnywhere, BlueprintAssignable, Category = "Delegates")
 	FOnScoreUpdated OnScoreUpdated;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintAssignable, Category = "Delegates")
-	FOnSoulsChanged OnSoulsChanged;
+	FOnSoulsChanged OnSoulsChanged;	
 	
 protected:
 	virtual void Init() override;

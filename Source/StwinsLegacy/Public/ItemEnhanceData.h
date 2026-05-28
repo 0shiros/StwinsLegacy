@@ -37,4 +37,10 @@ public :
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhancement Item Data")
 	TSubclassOf<UEnhancementItem> EnhancementClass;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhancement Item Data")
+	FTransform ItemTransform;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhancement Item Data")
+	bool bIsPurchased = false;
 };

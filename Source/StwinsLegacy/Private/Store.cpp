@@ -48,6 +48,7 @@ void AStore::ItemSell()
 		if (GameInstanceReference->SoulsQuantity >= ItemSellable->Cost)
 		{
 			GameInstanceReference->AddSouls(-ItemSellable->Cost);
+			GameInstanceReference->EnhancementItemDataMap[ItemSellable->ItemName]->bIsPurchased = true;
 			SetItemPurchased(PlayerReference);
 		}
 		else
