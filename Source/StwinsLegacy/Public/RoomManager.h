@@ -48,6 +48,9 @@ public:
 			
 	void SetTeleportPointsVisibility(TMap<EPosition, bool> VisibilityMap);
 	
+	UFUNCTION(BlueprintNativeEvent, Category = "Room")
+	void InitializeRoom(class UMyGameInstance* GameInstance);
+
 	//Spawn Enemies	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemies")
 	TMap<TSubclassOf<AEnemyCharacter>, int> EnemyTypes;

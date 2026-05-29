@@ -83,6 +83,11 @@ void APCGame::SetupInputComponent()
 		{
 			EnhancedInputComponent->BindAction(PauseMenuAction, ETriggerEvent::Triggered, this, &APCGame::PauseMenu);
 		}	
+		
+		if (HealAction)
+		{
+			EnhancedInputComponent->BindAction(HealAction, ETriggerEvent::Started, this, &APCGame::Heal);
+		}
 	}
 }
 
@@ -240,4 +245,15 @@ void APCGame::PauseMenu(const FInputActionValue& Value)
 	}
 	
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Pause Menu Action Triggered"));
+}
+
+void APCGame::Heal(const FInputActionValue& Value)
+{
+	if (!PlayerCharacter)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Character Not Valid"));
+		return;
+	}
+	
+	PlayerCharacter->Heal();
 }

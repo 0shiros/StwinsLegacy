@@ -24,6 +24,8 @@ AProjectile::AProjectile()
 	ProjectileMovement->ProjectileGravityScale = 0.f;
 	
 	ProjectileCollider->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnProjectileOverlap);
+	
+	InitialLifeSpan = 5.f;
 }
 
 void AProjectile::OnProjectileOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

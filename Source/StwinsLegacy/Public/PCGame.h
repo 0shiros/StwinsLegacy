@@ -45,6 +45,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	TObjectPtr<UInputAction> PauseMenuAction;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
+	TObjectPtr<UInputAction> HealAction;
+		
 	FVector MoveInput;
 	
 	FVector AimDirection;
@@ -74,4 +77,6 @@ public :
 	void Interact(const FInputActionValue& Value);
 	
 	void PauseMenu(const FInputActionValue& Value);		
+	
+	void Heal(const FInputActionValue& Value);
 };

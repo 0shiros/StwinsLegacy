@@ -11,11 +11,11 @@ struct STWINSLEGACY_API FBaseCharacterStats
 	GENERATED_BODY()	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	int MaxHealth = 100;
+	int MaxHealth = 300;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float BaseSpeed = 800.f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	int BaseAttack = 30;
+	int BaseAttack = 50;
 };

@@ -43,6 +43,7 @@ void APlayerCharacter::InitialiseCharacterStats()
 {
 	PlayerStats = GameInstance->GetCurrentSaveGame()->PlayerStats;
 	CurrentHealth = PlayerStats.MaxHealth;
+	OnHealthChanged.Broadcast(UpdateHealthBar());
 	GetCharacterMovement()->MaxWalkSpeed = PlayerStats.BaseSpeed;
 	
 	for (EAttackType AttackType : TEnumRange<EAttackType>())
@@ -83,6 +84,29 @@ bool APlayerCharacter::CanAttack(EAttackType AttackType)
 	}
 	
 	return false;
+}
+
+bool APlayerCharacter::CanHeal()
+{
+	float CurrentTime = GetWorld()->GetTimeSeconds();
+	if (CurrentTime - LastTimeHeal >= HealthTimer && CurrentHealth < PlayerStats.MaxHealth)
+	{
+		LastTimeHeal = CurrentTime;
+		return true;
+	}
+	
+	return false;
+}
+
+void APlayerCharacter::Heal()
+{
+	if (!CanHeal())
+	{
+		return;
+	}
+	
+	CurrentHealth = PlayerStats.MaxHealth;
+	OnHealthChanged.Broadcast(UpdateHealthBar());
 }
 
 void APlayerCharacter::BasicAttack(EAttackType AttackType)
@@ -318,7 +342,7 @@ void APlayerCharacter::SpecialAttack(EAttackType AttackType)
 }
 
 void APlayerCharacter::TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection,
-	float StunDuration)
+                                  float StunDuration)
 {
 	Super::TakeDamage(DamageAmount, KnockbackForce, KnockbackDirection, StunDuration);
 	

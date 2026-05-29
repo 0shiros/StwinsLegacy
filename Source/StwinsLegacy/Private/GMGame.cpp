@@ -83,13 +83,13 @@ void AGMGame::LoadTutorialRoom()
 	bIsLoadingRoom = true;
 	PendingRoom = TutorialRoom;
 	RoomToUnload = CurrentRoom;
-	PendingTeleportPosition = EPosition::South; // adapte si besoin pour ton tuto
+	PendingTeleportPosition = EPosition::South; 
 
 	UGameplayStatics::LoadStreamLevelBySoftObjectPtr(
 		this,
 		PendingRoom,
 		true,
-		false, // async for robust streaming flow
+		false, 
 		MakeLatentInfo(TEXT("OnTutorialRoomLoaded"), 1001)
 	);
 }
@@ -144,7 +144,7 @@ void AGMGame::RequestRoomLoad(const TSoftObjectPtr<UWorld>& RoomToLoad, EPositio
 		this,
 		PendingRoom,
 		true,
-		false, // async
+		false, 
 		MakeLatentInfo(TEXT("OnRoomLoaded"), 2001)
 	);
 }
@@ -170,7 +170,6 @@ void AGMGame::ApplyRoomLoaded()
 		TeleportPlayerToEntry(NewRoomManager, PendingTeleportPosition);
 	}
 
-	// Unload only after the new room is valid and player moved.
 	if (RoomToUnload.IsValid() && RoomToUnload != PendingRoom)
 	{
 		UGameplayStatics::UnloadStreamLevelBySoftObjectPtr(
@@ -272,6 +271,7 @@ void AGMGame::SetRoomData(ARoomManager* TargetRoomManager) const
 				{EPosition::East, false},
 				{EPosition::West, false}
 			});
+			TargetRoomManager->InitializeRoom(MyGameInstance);
 			break;
 		default:
 			break;

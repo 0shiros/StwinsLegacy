@@ -36,6 +36,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	FPlayerCharacterStats PlayerStats;	
 	
+	float HealthTimer = 3.f;
+	
+	float LastTimeHeal = 0.f;
+	
 	//References	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
 	TObjectPtr<class UMyGameInstance> GameInstance;
@@ -91,6 +95,10 @@ public:
 	
 	bool CanAttack(EAttackType AttackType);	
 	
+	bool CanHeal();
+	
+	void Heal();
+	
 	//Basic Attack
 	UFUNCTION(BlueprintCallable, Category = "BasicAttack")
 	void BasicAttack(EAttackType AttackType);
@@ -124,8 +132,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "State")
 	void SetCanMove(bool bNewCanMove) { bCanMove = bNewCanMove; }
-	
+		
 	//HUD
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	float UpdateHealthBar();		
+	float UpdateHealthBar();
+	
 };

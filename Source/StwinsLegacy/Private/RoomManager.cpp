@@ -36,6 +36,10 @@ void ARoomManager::SetTeleportPointsVisibility(TMap<EPosition, bool> VisibilityM
 		}
 	}
 }
+void ARoomManager::InitializeRoom_Implementation(UMyGameInstance* GameInstance)
+{
+	// Default implementation does nothing, can be overridden in Blueprint for specific room types
+}
 
 void ARoomManager::LaunchSpawnWaves(int32 CurrentCycle)
 {		
@@ -54,7 +58,33 @@ void ARoomManager::CheckToSpawnWave()
 	}
 
 	if (SpawnCycleEnemyIndex >= MaxSpawnCycles)
-	{		
+	{
+		switch (RoomType)
+		{	
+			case ERoomManagerType::Combat:
+				SetTeleportPointsVisibility(
+					{{EPosition::North, true}, 
+						{EPosition::East, true}, 
+						{EPosition::South, true}, 
+						{EPosition::West, true}});
+				break;
+			case ERoomManagerType::Transition:
+				SetTeleportPointsVisibility({
+					{EPosition::North, true}, 
+					{EPosition::East, false}, 
+					{EPosition::South, false}, 
+					{EPosition::West, false}});
+				break;
+			case ERoomManagerType::Store:
+				SetTeleportPointsVisibility({
+					{EPosition::North, false}, 
+					{EPosition::East, false}, 
+					{EPosition::South, false}, 
+					{EPosition::West, false}});
+				break;
+			default:
+				break;
+		}
 		return;
 	}
 
@@ -108,16 +138,16 @@ FTransform ARoomManager::GetRandomSpawnPoint() const
 	FVector BoxExtent = SpawnArea->GetScaledBoxExtent();
 	FVector Origin = SpawnArea->GetComponentLocation();
 
-	FVector RandomPoint = UKismetMathLibrary::RandomPointInBoundingBox(Origin, BoxExtent);
+	FVector RandomPoint = UKismetMathLibrary::RandomPointInBoundingBox(Origin, BoxExtent * 0.9f); // Slightly reduce the spawn area to avoid spawning too close to edges
 	return FTransform(RandomPoint);
 }
 
 void ARoomManager::OnDeathAreaOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor)
+	if (ABaseCharacter* Character = Cast<ABaseCharacter>(OtherActor))
 	{
-		OtherActor->Destroy();
+		Character->Destroy();
 	}
 }
 
