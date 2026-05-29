@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class STWINSLEGACY_API APCMainMenu : public APlayerController
 {
 	GENERATED_BODY()

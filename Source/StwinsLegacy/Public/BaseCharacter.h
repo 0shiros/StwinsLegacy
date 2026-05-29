@@ -3,27 +3,41 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Damageable.h"
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
-UCLASS()
-class STWINSLEGACY_API ABaseCharacter : public ACharacter
+UCLASS(Abstract)
+class STWINSLEGACY_API ABaseCharacter : public ACharacter, public IDamageable
 {
 	GENERATED_BODY()
 
+	
+	
 public:
-	// Sets default values for this character's properties
-	ABaseCharacter();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	ABaseCharacter();		
+	
+	//Animations
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimationDeath")
+	TObjectPtr<UAnimMontage> DeathMontage;
+	
+	// States
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+	bool bCanMove = true;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+	bool bCanAttack = true;
+	
+	// Stats
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	int CurrentHealth = 100;
+		
+	// Combat
+	virtual void TakeDamage(float DamageAmount, float KnockbackForce, FVector KnockbackDirection, float StunDuration) override;
+	
+	virtual void DeathAnimationNotify() override;
+		
+	virtual void DisableActions();
+	
+	virtual void EnableActions();
 };

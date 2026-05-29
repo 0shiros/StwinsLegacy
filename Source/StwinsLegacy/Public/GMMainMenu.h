@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class STWINSLEGACY_API AGMMainMenu : public AGameModeBase
 {
 	GENERATED_BODY()

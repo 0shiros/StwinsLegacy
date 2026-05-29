@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "PlayerCharacterStats.h"
 #include "GameFramework/SaveGame.h"
 #include "MySaveGame.generated.h"
 
@@ -14,4 +15,11 @@ class STWINSLEGACY_API UMySaveGame : public USaveGame
 {
 	GENERATED_BODY()
 	
+public:
+	
+	UPROPERTY(SaveGame)
+	FPlayerCharacterStats PlayerStats;
+	
+	UPROPERTY(SaveGame)
+	int PlayerPoints = 0;	
 };
