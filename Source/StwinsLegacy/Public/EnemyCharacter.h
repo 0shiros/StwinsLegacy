@@ -66,4 +66,6 @@ public:
 	virtual void DisableActions() override;
 	
 	virtual void EnableActions() override;
+	
+	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 };

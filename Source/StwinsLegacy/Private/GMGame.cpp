@@ -57,11 +57,6 @@ void AGMGame::HandlePlayerTeleportation(const ATeleportPoint* TeleportPoint)
 		return;
 	}
 
-	if (RoomManager)
-	{
-		SetAllTeleportsHidden(RoomManager);
-	}
-
 	const EPosition OppositeTeleportPoint = GetOppositeDirection(TeleportPoint->TeleportPosition);
 
 	if (CurrentRoomIndex < NumberOfFightRoomsPerCycle)
@@ -168,7 +163,7 @@ void AGMGame::ApplyRoomLoaded()
 		return;
 	}
 
-	SetAllTeleportsHidden(NewRoomManager);
+	SetRoomData(NewRoomManager);
 
 	if (PlayerCharacter)
 	{
@@ -235,7 +230,7 @@ ARoomManager* AGMGame::FindRoomManagerInStreamingLevel(const TSoftObjectPtr<UWor
 	return nullptr;
 }
 
-void AGMGame::SetAllTeleportsHidden(ARoomManager* TargetRoomManager) const
+void AGMGame::SetRoomData(ARoomManager* TargetRoomManager) const
 {
 	if (!TargetRoomManager)
 	{
@@ -246,7 +241,7 @@ void AGMGame::SetAllTeleportsHidden(ARoomManager* TargetRoomManager) const
 	{
 		case ERoomManagerType::Tutorial:
 			TargetRoomManager->SetTeleportPointsVisibility({
-				{EPosition::North, false},
+				{EPosition::North, true},
 				{EPosition::South, false},
 				{EPosition::East, false},
 				{EPosition::West, false}
@@ -259,6 +254,7 @@ void AGMGame::SetAllTeleportsHidden(ARoomManager* TargetRoomManager) const
 				{EPosition::East, false},	
 				{EPosition::West, false}
 			});
+			TargetRoomManager->LaunchSpawnWaves(CurrentCycle);
 			break;
 		case ERoomManagerType::Transition:
 			TargetRoomManager->SetTeleportPointsVisibility({
@@ -267,10 +263,11 @@ void AGMGame::SetAllTeleportsHidden(ARoomManager* TargetRoomManager) const
 				{EPosition::East, false},
 				{EPosition::West, false}
 			});
+			TargetRoomManager->LaunchSpawnWaves(CurrentCycle);
 			break;
 		case ERoomManagerType::Store:
 			TargetRoomManager->SetTeleportPointsVisibility({
-				{EPosition::North, false},
+				{EPosition::North, true},
 				{EPosition::South, false},
 				{EPosition::East, false},
 				{EPosition::West, false}

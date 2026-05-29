@@ -82,7 +82,7 @@ private:
 	FLatentActionInfo MakeLatentInfo(const FName& CallbackName, int32 UuidOffset = 0) const;
 
 	ARoomManager* FindRoomManagerInStreamingLevel(const TSoftObjectPtr<UWorld>& RoomSoftPtr) const;
-	void SetAllTeleportsHidden(ARoomManager* TargetRoomManager) const;
+	void SetRoomData(ARoomManager* TargetRoomManager) const;
 	bool TeleportPlayerToEntry(ARoomManager* TargetRoomManager, EPosition EntryPosition) const;
 	void AdvanceCycleCountersAfterLoad(const TSoftObjectPtr<UWorld>& LoadedRoom);
 

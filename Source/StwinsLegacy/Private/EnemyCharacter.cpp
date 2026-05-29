@@ -139,3 +139,10 @@ void AEnemyCharacter::EnableActions()
 	OnCanMove.ExecuteIfBound(true);
 	OnCanAttack.ExecuteIfBound(true);
 }
+
+void AEnemyCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	OnDestroyed.RemoveAll(this);
+	
+	Super::EndPlay(EndPlayReason);
+}
